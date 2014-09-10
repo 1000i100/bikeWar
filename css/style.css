@@ -1,0 +1,141 @@
+@font-face {
+    font-family: Pixel01;
+    src: url('../fonts/04B_09__.TTF');
+}
+@font-face {
+    font-family: Silom;
+    src: url('../fonts/silom_regular.ttf');
+}
+
+@font-face {
+    font-family: Small;
+    src: url('../fonts/small_pixel-7.ttf');
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    background-color: #000000;
+    height: 100%;
+    margin: 0px;
+}
+
+.bikewar {
+    width: 100%;
+    height: 100%;
+    background-image: url("../images/mapBackground.png");
+    background-position: center 5px;
+    background-repeat: no-repeat;
+}
+
+.bikewar .logo {
+    text-align: center;
+}
+
+.bikewar .application{
+    width: 100%;
+    text-align: center;
+}
+
+.bikewar .footer {
+    width: 100%;
+    height: 85px;
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+    margin: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bikewar .fightButton {
+    width: 145px;
+    height: 77px;
+    border: none;
+    background: url("../images/buttonNormal.png") no-repeat scroll 0 0 transparent;
+}
+
+.bikewar .fightButton:hover {
+    background: url("../images/buttonHover.png") no-repeat scroll 0 0 transparent;
+}
+.bikewar .fightButton:active {
+    background: url("../images/buttonPressed.png") no-repeat scroll 0 0 transparent;
+}
+
+.scoreBarPink{
+    width: 100px;
+    height: 24px;
+    background: url('../images/scoreBarCursor.png') repeat-x scroll 0 0 transparent;
+}
+
+.scoreBarOrange{
+    width: 100px;
+    height: 24px;
+    background: url('../images/scoreBarCursor2.png') repeat-x scroll 0 0 transparent;
+}
+
+
+.playerName {
+    width: 1353px;
+    font-family: 'Silom', sans-serif;
+    font-size: 24px;
+    color: #fff64e;
+    /*text-align: center;*/
+    margin: 0px;
+}
+
+.playerOneScore {
+    background: url('../images/scoreBackground.png') repeat-x scroll 0 0 transparent;
+    font-family: 'Small', sans-serif;
+    font-size: 20px;
+    color: #FFFFFF;
+    height: 24px;
+    padding-bottom: 6px;
+}
+
+.playerTwoScore {
+    background: url('../images/scoreBackground2.png') repeat-x scroll 0 0 transparent;
+    font-family: 'Small', sans-serif;
+    font-size: 20px;
+    color: #FFFFFF;
+    height: 24px;
+    margin-top: 3px;
+    padding-bottom: 6px;
+}
+
+.score {
+    font-family: "Arial";
+    font-size: 10px;
+    color: #333333;
+}
+
+.container_12 {
+    width:100% !important;
+    height: 100% !important;
+    background-color: #000000 !important;
+    padding: 0px !important;
+}
+
+.grid_12 {
+    width:100% !important;
+    height: 100% !important;
+}
+
+table {
+    border:none !important;
+    padding: 0px !important;
+}
+td table {
+    width: auto !important;
+    min-width: 0 !important;
+    display:table !important;
+}
+tbody {
+    border:none !important;
+    padding: 0px !important;
+}
+td {
+    border:none !important;
+    padding: 0px !important;
+}

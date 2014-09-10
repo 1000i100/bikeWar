@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BikeWar</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
+</head>
+<body>
+ <div class="bikewar">
+     <div class="logo">
+        <img src="images/logo.png">
+     </div>
+     <div class="application">
+         <canvas id="applicationCanvas" style="border: 0px white solid;width: 1353px; height: 549px; opacity: 1.0"/>
+     </div>
+     <div class="footer">
+         <table width="100%">
+             <tr width="100%">
+                 <td width="100%" align="center">
+                     <table cellpadding="0px" cellspacing="0px">
+                         <tr>
+                             <td style="vertical-align: bottom">
+                                 <table cellpadding="0px" cellspacing="0px">
+                                     <tr>
+                                         <td valign="bottom">
+                                             <img src="images/scoreBorderLeft.png">
+                                         </td>
+                                         <td valign="bottom" style="padding-bottom: 5px;">
+                                             <div id="playerOneScore" class="playerOneScore">
+                                                 0
+                                             </div>
+
+                                         </td>
+                                         <td valign="bottom">
+                                             <img src="images/scoreBorderRight.png">
+                                         </td>
+                                         <td valign="bottom">
+                                             <div class="scoreBarPink" id="playerOneScoreBar">
+                                             </div>
+                                         </td>
+                                         <td valign="bottom" style="padding-bottom: 5px;">
+                                             <img src="images/scoreBarCorner.png">
+                                         </td>
+                                     </tr>
+                                     <tr class="playerName">
+                                         <td></td>
+                                         <td></td>
+                                         <td></td>
+                                         <td style="text-align: right" id="playerOneName">damo</td>
+                                     </tr>
+                                 </table>
+                             </td>
+
+                             <td style="width: 145px;height: 77px;color: #2556ee;font-family:Pixel01;font-size: 10px;">
+                                 <img id="fightRunningImage" src="images/buttonRunning.png" style="position: inherit; top: 0px;display: none"/>
+                                 <div id="time" style="position: absolute;top: 25px;padding-left: 61px;display: none" >01:08</div>
+                                 <button id="fightButton" class="fightButton" style="position: absolute;top: 0px"></button>
+                             </td>
+                             <td style="vertical-align: bottom">
+                                 <table cellpadding="0px" cellspacing="0px">
+                                     <tr>
+                                         <td valign="bottom" style="padding-bottom: 5px;">
+                                             <img src="images/scoreBarCorner2.png">
+                                         </td>
+                                         <td valign="bottom">
+                                             <div id="playerTwoScoreBar" class="scoreBarOrange">
+                                             </div>
+
+                                         </td>
+                                         <td valign="bottom">
+                                             <img src="images/scoreBorderLeft2.png">
+                                         </td>
+                                         <td valign="bottom" style="padding-bottom: 5px;">
+                                             <div id="playerTwoScore" class="playerTwoScore">
+                                                 0
+                                             </div>
+                                         </td>
+                                         <td valign="bottom">
+                                             <img src="images/scoreBorderRight2.png">
+                                         </td>
+                                     </tr>
+                                     <tr class="playerName">
+                                         <td></td>
+                                         <td id="playerTwoName">moebius</td>
+                                         <td></td>
+                                         <td></td>
+                                     </tr>
+                                 </table>
+                             </td>
+
+
+                         </tr>
+                     </table>
+                 </td>
+             </tr>
+         </table>
+
+     </div>
+ </div>
+ <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
+ <script src="http://code.createjs.com/tweenjs-0.5.1.min.js"></script>
+ <script src="js/release/Player.js"></script>
+ <script>
+     com.tamina.bikewar.PlayerUI.init("Nous","ia.js","Concurrent","js/otherIA/AQube_72.js",false);
+ </script>
+</body>
+</html>
