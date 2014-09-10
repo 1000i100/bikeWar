@@ -46,7 +46,7 @@
                                          <td></td>
                                          <td></td>
                                          <td></td>
-                                         <td style="text-align: right" id="playerOneName">damo</td>
+                                         <td style="text-align: right" id="playerOneName"></td>
                                      </tr>
                                  </table>
                              </td>
@@ -81,7 +81,7 @@
                                      </tr>
                                      <tr class="playerName">
                                          <td></td>
-                                         <td id="playerTwoName">moebius</td>
+                                         <td id="playerTwoName"></td>
                                          <td></td>
                                          <td></td>
                                      </tr>
@@ -99,9 +99,53 @@
  </div>
  <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
  <script src="http://code.createjs.com/tweenjs-0.5.1.min.js"></script>
- <script src="js/release/Player.js"></script>
+ <script src="Player.js"></script>
  <script>
-     com.tamina.bikewar.PlayerUI.init("Nous","ia.js","Concurrent","js/otherIA/AQube_72.js",false);
+     // personnalisation de la partie via paramètres dans l'url.
+     urlParams = window.location.href.split('?');
+     urlParams.shift();
+     for (var i = 0; i < urlParams.length; i++) {
+         var parts = urlParams[i].split('=');
+         var key = parts[0];
+         var value = parts[1];
+         switch (key) {
+             case 'j1':
+             case 'joueur1':
+                 var player1Name = value.split('.')[0].split('/').pop();
+                 var player1iaFile = 'ia/' + value;
+                 break;
+             case 'j2':
+             case 'joueur2':
+                 var player2Name = value.split('.')[0].split('/').pop();
+                 var player2iaFile = 'ia/' + value;
+                 break;
+             case 'debug':
+                 var debug = true;
+                 break;
+             case 'start':
+                 var start = true;
+                 break;
+             case 'speed':
+                 var speed = parseFloat(value);
+                 break;
+             default :
+                 console.log(key, 'non recconu');
+         }
+     }
+
+     // options par défaut
+     if (!player1Name) player1Name = 'Joueur';
+     if (!player1iaFile) player1iaFile = 'ia/joueur.js';
+     if (!player2Name) player2Name = 'Concurrent';
+     if (!player2iaFile) player2iaFile = 'ia/concurrent.js';
+     if (!debug) debug = false;
+     if (!start) start = false;
+     if (!speed) speed = 1;
+
+     // init
+     var gameSpeed = 1000/speed;
+     com.tamina.bikewar.PlayerUI.init(player1Name, player1iaFile, player2Name, player2iaFile, debug, gameSpeed);
+     if(start) com.tamina.bikewar.PlayerUI._renderer.start();
  </script>
 </body>
 </html>
