@@ -363,9 +363,12 @@
 		com.tamina.bikewar.core.Global.IMG_BASE_PATH = imgBasePath;
 		com.tamina.bikewar.core.Global.SAVE_URL = savePath;
 	};
-	com.tamina.bikewar.PlayerUI.init = function (firstPlayerName, firstPlayerScript, secondPlayerName, secondPlayerScript, debugMode, speed) {
+	com.tamina.bikewar.PlayerUI.init = function (firstPlayerName, firstPlayerScript, secondPlayerName, secondPlayerScript, debugMode, speed, consoleLogData) {
 		if(!speed) speed = com.tamina.bikewar.game.Game.GAME_SPEED;
+		if(!consoleLogData) consoleLogData = false;
 		com.tamina.bikewar.game.Game.GAME_SPEED = speed;
+		com.tamina.bikewar.game.Game.CONSOLE_LOG_DATA = consoleLogData;
+
 		if (debugMode == null) debugMode = false;
 		org.tamina.log.QuickLogger.info("init " + firstPlayerName + " vs " + secondPlayerName);
 		var applicationCanvas = window.document.getElementById("applicationCanvas");
@@ -873,6 +876,7 @@
 			this._worker = null;
 		}, send: function (data) {
 			this._startTime = new Date().getTime();
+			if(com.tamina.bikewar.game.Game.CONSOLE_LOG_DATA) console.log(this.get_playerId(),data);
 			this._worker.postMessage(new com.tamina.bikewar.data.TurnMessage(this.get_playerId(), data));
 		}, isRunning: function () {
 			return this._startTime > 0;

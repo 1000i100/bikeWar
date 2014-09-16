@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8"/>
     <title>BikeWar</title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
@@ -97,8 +98,8 @@
 
      </div>
  </div>
- <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
- <script src="http://code.createjs.com/tweenjs-0.5.1.min.js"></script>
+ <script src="vendors/easeljs-0.7.1.min.js"></script>
+ <script src="vendors/tweenjs-0.5.1.min.js"></script>
  <script src="Player.js"></script>
  <script>
      // personnalisation de la partie via paramètres dans l'url.
@@ -128,6 +129,9 @@
              case 'speed':
                  var speed = parseFloat(value);
                  break;
+             case 'logData':
+                 var consoleLogData = true;
+                 break;
              default :
                  console.log(key, 'non recconu');
          }
@@ -141,10 +145,11 @@
      if (!debug) debug = false;
      if (!start) start = false;
      if (!speed) speed = 1;
+     if (!consoleLogData) consoleLogData = false;
 
      // init
      var gameSpeed = 1000/speed;
-     com.tamina.bikewar.PlayerUI.init(player1Name, player1iaFile, player2Name, player2iaFile, debug, gameSpeed);
+     com.tamina.bikewar.PlayerUI.init(player1Name, player1iaFile, player2Name, player2iaFile, debug, gameSpeed, consoleLogData);
      if(start) com.tamina.bikewar.PlayerUI._renderer.start();
  </script>
 </body>
