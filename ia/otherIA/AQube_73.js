@@ -15,7 +15,7 @@ var color = 0;
 var debugMessage = "";
 
 
-var exports.onmessage = function (event) {
+onmessage = function (event) {
     if (event.data != null) {
         var turnMessage = event.data;
         id = turnMessage.playerId;
@@ -27,15 +27,17 @@ var exports.onmessage = function (event) {
         } catch (e) {
             msg = 'Error : ' + e;
         }
-        exports.postMessage(new TurnResult(orders, msg));
+        postMessage(new TurnResult(orders, msg));
     }
-    else exports.postMessage("data null");
+    else postMessage("data null");
 };
 
 
 var _turnNum = 1;
 var _movingTruckId = new Array();
 var _trucksDestinations = [];
+var _lost = 0;
+var _gain = 0;
 
 var CONSTANTES = {
     'DISTANCE_TURN_PENALTY': 12.0,
@@ -44,10 +46,9 @@ var CONSTANTES = {
 var NOT_FOUND_COUNTER = 0;
 var MISSED_OPPORTUNITY = 0;
 
-var Trucks = function(context, id, movingTruckId) {
+var Trucks = function(context, id) {
     this.context = context;
     this.id = id;
-    this.movingTruckId = movingTruckId;
     this.stations = new Stations(context, id);
 };
 
@@ -60,7 +61,10 @@ Trucks.prototype.mines = function() {
 
 Trucks.prototype.whenAtDestination = function(result, truck, state) {
     var _this = this;
-    HxOverrides.remove(_this.movingTruckId, truck.id);
+    HxOverrides.remove(_movingTruckId, truck.id);
+    _.remove(_trucksDestinations, function(truckDestination) {
+        return truckDestination.id === truck.currentStation.id;
+    });
 
     var node = state.getNodeOfStation(truck.currentStation);
     if (!node) {
@@ -73,24 +77,16 @@ Trucks.prototype.whenAtDestination = function(result, truck, state) {
 
     if(delta < 0) {
         result.push(new UnLoadingOrder(truck.id, truck.currentStation.id, delta * -1));
-        truck.currentStation.bikeNum += delta;
-        truck.bikeNum += delta;
     } else if (delta > 0) {
         result.push(new LoadingOrder(truck.id, truck.currentStation.id, delta));
-        truck.currentStation.bikeNum += delta;
-        truck.bikeNum += delta;
     } else {
         var nextTime = node.getTimeForTurn(state.context, (_turnNum + 1));
         var nextTrend = node.getTrend(truck.currentStation, nextTime);
 
         if (truck.currentStation.bikeNum < truck.currentStation.slotNum && (nextTrend === Trend.DECREASE || nextTrend === Trend.STABLE) && truck.bikeNum > 0) {
             result.push(new UnLoadingOrder(truck.id, truck.currentStation.id, 1));
-            truck.currentStation.bikeNum += 1;
-            truck.bikeNum -= 1;
         } else if (truck.currentStation.bikeNum > 0 && (nextTrend === Trend.INCREASE || nextTrend === Trend.STABLE) && truck.bikeNum < Game.TRUCK_NUM_SLOT) {
             result.push(new LoadingOrder(truck.id, truck.currentStation.id, 1));
-            truck.currentStation.bikeNum -= 1;
-            truck.bikeNum += 1;
         } else {
             MISSED_OPPORTUNITY++;
             console.log('MISSED OPPORTUNITY ! (' + MISSED_OPPORTUNITY + ')');
@@ -102,7 +98,7 @@ Trucks.prototype.whenAtDestination = function(result, truck, state) {
 Trucks.prototype.onStartOrLeavingStation = function(result, truck, state) {
     var _this = this;
 
-    _this.movingTruckId.push(truck.id);
+    _movingTruckId.push(truck.id);
 
     var destination = _this.getNextDestination(truck, state);
     if (destination !== undefined && destination !== null) {
@@ -119,10 +115,7 @@ Trucks.prototype.onTheRoadMoving = function(result, truck) {
 
 Trucks.prototype.atDestination = function(truck) {
     var _this = this;
-    _trucksDestinations = _.remove(_trucksDestinations, function(truckDestination) {
-        return truckDestination.id === truck.currentStation.id;
-    });
-    return _this.movingTruckId.indexOf(truck.id) > -1;
+    return _movingTruckId.indexOf(truck.id) > -1;
 }
 
 Trucks.prototype.getNextDestination = function(truck, state) {
@@ -153,6 +146,13 @@ var NodeStation = function(id, truck, station) {
     this.capacityMin = station.bikeNum;
     this.capacityMax = station.bikeNum;
     this.score = 0;
+
+    if (GameUtils.hasStationEnoughBike(station) && station.owner && station.owner.id == id) {
+        _gain++;
+    }
+    if (!GameUtils.hasStationEnoughBike(station) && station.owner && station.owner.id == id) {
+        _lost++;
+    }
 };
 NodeStation.prototype.getBikeToMatchDelta = function(truck, capacity) {
     var ideal = Math.round(this.station.slotNum / 2.0);
@@ -229,7 +229,7 @@ NodeStation.prototype.computeCapacityAtDistance = function(context) {
 NodeStation.prototype.getTimeForTurn = function(context, turn) {
     return new Date(context.currentTime.getMilliseconds() + (turn * Game.TURN_TIME));
 }
-NodeStation.prototype.getTrend = function(target, time ) {
+NodeStation.prototype.getTrend = function(target, time) {
     var currentIndex = time.getHours() * 4 +  Math.floor(  time.getMinutes() * 4 / 60 ) ;
     var nextIndex = currentIndex + 1;
     if(nextIndex + 1 > target.profile.length){
@@ -268,7 +268,7 @@ NodeStation.prototype.computeScore = function(context, truck) {
     }
 
     var delta = Math.abs(_this.getBikeToMatchDelta(truck, _this.capacityAvg));
-    _this.score = delta * delta * 10;
+    _this.score = delta * delta * 2;
     _this.score += _this.station.slotNum;
 
     if (overCapacity(_this.capacityAvg) && truckFull()) {
@@ -286,14 +286,14 @@ NodeStation.prototype.computeScore = function(context, truck) {
 
     if (!overCapacity(_this.capacityAvg) && !underCapacity(_this.capacityAvg) && _this.station.owner && _this.station.owner.id != _this.id) {
         _this.score += 250;
-        _this.score *= 2;
+        //_this.score *= 2;
     }
 
     if (_this.station.owner && _this.station.owner.id == _this.id) {
-        _this.score *= 1.8;
+        _this.score *= ((_lost / _gain * 10) + 1);
     }
     if (_this.station.owner && _this.station.owner.id != _this.id) {
-        _this.score *= 1.6;
+        _this.score *= 2.0;
     }
 
     var penalty = CONSTANTES.DISTANCE_TURN_PENALTY;
@@ -352,15 +352,16 @@ State.prototype.getNodeOfStation = function(station) {
 var getOrders = function (context) {
     var result = new Array();
 
-    var trucks = new Trucks(context, this.id, this._movingTruckId);
+    var trucks = new Trucks(context, id);
     var myTrucks = trucks.mines();
 
     _.forEach(myTrucks, function(truck) {
         if (truck.currentStation == null || truck.currentStation == undefined) {
             trucks.onTheRoadMoving(result, truck);
         } else {
-            var state = new State(context, this.id);
+            var state = new State(context, id);
             state.analyze(truck);
+            //TODO: sortir le remove de atDestination pour le placer après la boucle principale.
             if(trucks.atDestination(truck)) {
                 trucks.whenAtDestination(result, truck, state);
             } else {
@@ -369,6 +370,7 @@ var getOrders = function (context) {
         }
     });
 
+    //console.log('RATIO [ ' + (_lost / _gain * 100) + ' %] ; TOTAL LOSS = ' + _lost + ' ; TOTAL GAIN = ' + _gain);
     this._turnNum++;
     return result;
 };
@@ -8159,6 +8161,7 @@ HxOverrides.remove = function(a,obj) {
       return _;
     });
   }
+  /*
   // check for `exports` after `define` in case a build optimizer adds an `exports` object
   else if (freeExports && freeModule) {
     // in Node.js or RingoJS
@@ -8170,6 +8173,7 @@ HxOverrides.remove = function(a,obj) {
       freeExports._ = _;
     }
   }
+  */
   else {
     // in a browser or Rhino
     root._ = _;
