@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 (function ($hx_exports) {
 	"use strict";
 	$hx_exports.com = $hx_exports.com || {};
@@ -207,9 +208,25 @@
 		this._iaList = new Array();
 
 		// utilise les paramètres passé en ligne de commande pour choisir les IA à opposer.
+		var player1Name = 'IA1';
+		var player1iaFile = 'ia/otherIA/IA1.js';
+		var player2Name = 'IA2';
+		var player2iaFile = 'ia/otherIA/IA2.js';
 
-		this._iaList.push(new com.tamina.bikewar.data.IAInfo("1", "IA1", "IA1.js", 1));
-		this._iaList.push(new com.tamina.bikewar.data.IAInfo("2", "IA2", "IA2.js", 1));
+		if(process && process.argv){
+			if(process.argv[2] && process.argv[2].length) {
+				var value = process.argv[2];
+				player1Name = value.split('.')[0].split('/').pop();
+				player1iaFile = value;
+			}
+			if(process.argv[3] && process.argv[3].length) {
+				var value = process.argv[3];
+				player2Name = value.split('.')[0].split('/').pop();
+				player2iaFile = value;
+			}
+		}
+		this._iaList.push(new com.tamina.bikewar.data.IAInfo("1", player1Name, player1iaFile, 1));
+		this._iaList.push(new com.tamina.bikewar.data.IAInfo("2", player2Name, player2iaFile, 1));
 		this.iadownloader_completeHandler();
 	};
 	$hxClasses["com.tamina.bikewar.ServerProcess"] = com.tamina.bikewar.ServerProcess;
@@ -3134,8 +3151,9 @@
 	$hxClasses["com.tamina.bikewar.server.URLUtil"] = com.tamina.bikewar.server.URLUtil;
 	com.tamina.bikewar.server.URLUtil.__name__ = true;
 	com.tamina.bikewar.server.URLUtil.getFileName = function (url) {
-		var pos = url.lastIndexOf("/") + 1;
-		return HxOverrides.substr(url, pos, null);
+		return url;
+/*		var pos = url.lastIndexOf("/") + 1;
+		return HxOverrides.substr(url, pos, null);*/
 	};
 	var haxe = {};
 	haxe.Log = function () {
