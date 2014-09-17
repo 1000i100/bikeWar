@@ -100,15 +100,18 @@ var suivre = function (donneePartie) {
     var monCamion = undefined;
     for (i = 0; i < donneePartie.trucks.length; i++) {
         if (donneePartie.trucks[i].owner.name == "parasite" && donneePartie.trucks[i].currentStation != null) {
-            monCamion = donneePartie.trucks[i]
+            monCamion = donneePartie.trucks[i];
         }
     }
+
     for (i = 0; i < donneePartie.stations.length; i++) {
         if (monCamion && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite") {
-            order.push(new MoveOrder(monCamion.id, donneePartie.stations[i].id));
-            break;
+            order.push(new LoadingOrder(monCamion.id,monCamion.currentStation.id,1));
+            //order.push(new MoveOrder(monCamion.id, donneePartie.stations[i].id));
         }
-    }
+            /*break;*/
+/*
+
     //postMessage({'orders':order,'consoleMessage':'','error':''});
     return order;
 
