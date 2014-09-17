@@ -42,7 +42,8 @@ onmessage = function (event) {
         var orders = [];
         var msg = "";
         try {
-            orders = getOrders(turnMessage.data);
+         //orders = getOrders(turnMessage.data);
+         orders = suivre(turnMessage.data);
             msg = debugMessage;
         } catch (e) {
             msg = 'Error : ' + e;
@@ -66,11 +67,10 @@ var getOrders = function (context) {
     var result = new Array();
     var _g1 = 0;
     var _g = context.trucks.length;
-
     while(_g1 < _g) {
         var i = _g1++;
         var truck = context.trucks[i];
-        suivre(context);
+
         if(truck.owner.id == this.id && truck.currentStation != null) {
             if(this._movingTruckId.indexOf(truck.id) > -1) {
                 HxOverrides.remove(this._movingTruckId,truck.id);
@@ -92,23 +92,27 @@ var getOrders = function (context) {
     this._turnNum++;
     return result;
 };
-var suivre = function (donneePartie)
-{
+var suivre = function (donneePartie) {
 
-var str = "\n Station = "+JSON.stringify(donneePartie.stations);
+//var str = "\n Station = "+JSON.stringify(donneePartie.stations);
+//postMessage({'orders':[],'consoleMessage':str,'error':''});
+    var order = new Array();
+    var monCamion = undefined;
+    for (i = 0; i < donneePartie.trucks.length; i++) {
+        if (donneePartie.trucks[i].owner.name == "parasite" && donneePartie.trucks[i].currentStation != null) {
+            monCamion = donneePartie.trucks[i]
+        }
+    }
+    for (i = 0; i < donneePartie.stations.length; i++) {
+        if (monCamion && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite") {
+            order.push(new MoveOrder(monCamion.id, donneePartie.stations[i].id));
+            break;
+        }
+    }
+    //postMessage({'orders':order,'consoleMessage':'','error':''});
+    return order;
 
-postMessage({'orders':[],'consoleMessage':str,'error':''});
-for(i=0;i<donneePartie.stations;i++){
-
-
-/*if(BikeStation.owner.id != id )
-{
-    MoveOrder.prototype = Object.create(Order.prototype);
-    Order.apply(this, [truckId, targetStationId, OrderType.MOVE]);
-
-}*/
-}
-}
+};
 
 /**
  * La Map
