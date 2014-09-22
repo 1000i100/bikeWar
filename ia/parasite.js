@@ -97,22 +97,23 @@ var suivre = function (donneePartie) {
 //var str = "\n Station = "+JSON.stringify(donneePartie.stations);
 //postMessage({'orders':[],'consoleMessage':str,'error':''});
     var order = new Array();
-    var monCamion = undefined;
-    for (i = 0; i < donneePartie.trucks.length; i++) {
+    var mesCamions = [];
+        for (i = 0; i < donneePartie.trucks.length; i++) {
         if (donneePartie.trucks[i].owner.name == "parasite" && donneePartie.trucks[i].currentStation != null) {
-            monCamion = donneePartie.trucks[i];
+            mesCamions.push(donneePartie.trucks[i]);
         }
     }
 
     for (i = 0; i < donneePartie.stations.length; i++) {
-        if (monCamion && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite") {
-            order.push(new LoadingOrder(monCamion.id,monCamion.currentStation.id,1));
-            //order.push(new MoveOrder(monCamion.id, donneePartie.stations[i].id));
+        if (mesCamions.length && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite") {
+            order.push(new MoveOrder(mesCamions[0].id, donneePartie.stations[i].id));
+            //order.push(new LoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
+            mesCamions.shift();
         }
-            /*break;*/
-/*
 
-    //postMessage({'orders':order,'consoleMessage':'','error':''});
+    /*postMessage({'orders':order,'consoleMessage':'','error':''});*/
+    }
+    this._turnNum++;
     return order;
 
 };
