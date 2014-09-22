@@ -1,2 +1,0 @@
-setTimeout(function(){postMessage({'orders':[],'consoleMessage':'Bonjour, et toutes mes condoléances !','error':''});},1388);
-setTimeout(function(){postMessage({'orders':[],'consoleMessage':"Vous ne l'avez pas vu venir, avouez ?",'error':''});},1389);
