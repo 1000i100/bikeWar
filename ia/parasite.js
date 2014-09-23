@@ -105,8 +105,8 @@ var suivre = function (donneePartie) {
     }
 
     for (i = 0; i < donneePartie.stations.length; i++) {
-        if(mesCamions.length&&mesCamions[0].currentStation.bikeNum>0&&mesCamions[0].bikeNum<1 ){
-            order.push(new LoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
+        if(mesCamions.length&&mesCamions[0].currentStation.bikeNum>0&&mesCamions[0].bikeNum<1 && mesCamions[0].currentStation.owner && mesCamions[0].currentStation.owner.name != "parasite" ){
+           order.push(new LoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
 
         mesCamions.shift();
 
