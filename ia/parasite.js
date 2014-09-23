@@ -105,7 +105,19 @@ var suivre = function (donneePartie) {
     }
 
     for (i = 0; i < donneePartie.stations.length; i++) {
-        if (mesCamions.length && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite") {
+        if(mesCamions.length&&mesCamions[0].currentStation.bikeNum>0&&mesCamions[0].bikeNum<1 ){
+            order.push(new LoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
+
+        mesCamions.shift();
+
+        }
+       else if(mesCamions.length&&mesCamions[0].currentStation.slotNum>0&&mesCamions[0].bikeNum>0)
+        {
+            order.push(new UnLoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
+            mesCamions.shift();
+        }
+
+      else  if (mesCamions.length && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite") {
             order.push(new MoveOrder(mesCamions[0].id, donneePartie.stations[i].id));
             //order.push(new LoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
             mesCamions.shift();
