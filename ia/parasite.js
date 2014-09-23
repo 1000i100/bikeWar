@@ -97,33 +97,38 @@ var suivre = function (donneePartie) {
 //var str = "\n Station = "+JSON.stringify(donneePartie.stations);
 //postMessage({'orders':[],'consoleMessage':str,'error':''});
     var order = new Array();
-    var mesCamions = [];
-        for (i = 0; i < donneePartie.trucks.length; i++) {
+    var mesCamionsDispo = [];
+    var mesCamionsMouvant = [];
+    for (i = 0; i < donneePartie.trucks.length; i++) {
         if (donneePartie.trucks[i].owner.name == "parasite" && donneePartie.trucks[i].currentStation != null) {
-            mesCamions.push(donneePartie.trucks[i]);
+            mesCamionsDispo.push(donneePartie.trucks[i]);
+        }
+        if (donneePartie.trucks[i].owner.name == "parasite" && donneePartie.trucks[i].destination != null) {
+            mesCamionsMouvant.push(donneePartie.trucks[i]);
         }
     }
 
     for (i = 0; i < donneePartie.stations.length; i++) {
-        if(mesCamions.length&&mesCamions[0].currentStation.bikeNum>0&&mesCamions[0].bikeNum<1 && mesCamions[0].currentStation.owner && mesCamions[0].currentStation.owner.name != "parasite" ){
-           order.push(new LoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
+        if(mesCamionsDispo.length&&mesCamionsDispo[0].currentStation.bikeNum>0&&mesCamionsDispo[0].bikeNum<1 && mesCamionsDispo[0].currentStation.owner && mesCamionsDispo[0].currentStation.owner.name != "parasite"){
+            order.push(new LoadingOrder(mesCamionsDispo[0].id,mesCamionsDispo[0].currentStation.id,1));
 
-        mesCamions.shift();
-
+            mesCamionsDispo.shift();
         }
-       else if(mesCamions.length&&mesCamions[0].currentStation.slotNum>0&&mesCamions[0].bikeNum>0)
+        else if(mesCamionsDispo.length&&mesCamionsDispo[0].currentStation.slotNum>0&&mesCamionsDispo[0].bikeNum>0)
         {
-            order.push(new UnLoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
-            mesCamions.shift();
+            order.push(new UnLoadingOrder(mesCamionsDispo[0].id,mesCamionsDispo[0].currentStation.id,1));
+            mesCamionsDispo.shift();
         }
 
-      else  if (mesCamions.length && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite") {
-            order.push(new MoveOrder(mesCamions[0].id, donneePartie.stations[i].id));
-            //order.push(new LoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
-            mesCamions.shift();
+        else if (mesCamionsDispo.length && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite"
+            && ( !mesCamionsMouvant.length
+                || (mesCamionsMouvant.length && mesCamionsMouvant[0].destination.id != donneePartie.stations[i].id))) {
+            order.push(new MoveOrder(mesCamionsDispo[0].id, donneePartie.stations[i].id));
+            //order.push(new LoadingOrder(mesCamionsDispo[0].id,mesCamionsDispo[0].currentStation.id,1));
+            mesCamionsDispo.shift();
         }
 
-    /*postMessage({'orders':order,'consoleMessage':'','error':''});*/
+        /*postMessage({'orders':order,'consoleMessage':'','error':''});*/
     }
     this._turnNum++;
     return order;
