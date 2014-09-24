@@ -99,6 +99,7 @@ var suivre = function (donneePartie) {
     var order = new Array();
     var mesCamionsDispo = [];
     var mesCamionsMouvant = [];
+    var stationsEnnemis = [];
     for (i = 0; i < donneePartie.trucks.length; i++) {
         if (donneePartie.trucks[i].owner.name == "parasite" && donneePartie.trucks[i].currentStation != null) {
             mesCamionsDispo.push(donneePartie.trucks[i]);
@@ -109,7 +110,9 @@ var suivre = function (donneePartie) {
     }
 
     for (i = 0; i < donneePartie.stations.length; i++) {
-        if(mesCamionsDispo.length&&mesCamionsDispo[0].currentStation.bikeNum>0&&mesCamionsDispo[0].bikeNum<1 && mesCamionsDispo[0].currentStation.owner && mesCamionsDispo[0].currentStation.owner.name != "parasite"){
+        if(mesCamionsDispo.length&&mesCamionsDispo[0].currentStation.bikeNum>0&&mesCamionsDispo[0].bikeNum<1
+            && mesCamionsDispo[0].currentStation.owner && mesCamionsDispo[0].currentStation.owner.name != "parasite")
+        {
             order.push(new LoadingOrder(mesCamionsDispo[0].id,mesCamionsDispo[0].currentStation.id,1));
 
             mesCamionsDispo.shift();
@@ -120,20 +123,37 @@ var suivre = function (donneePartie) {
             mesCamionsDispo.shift();
         }
 
-        else if (mesCamionsDispo.length && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite"
+       /* else if (mesCamionsDispo.length && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite"
             && ( !mesCamionsMouvant.length
                 || (mesCamionsMouvant.length && mesCamionsMouvant[0].destination.id != donneePartie.stations[i].id))) {
             order.push(new MoveOrder(mesCamionsDispo[0].id, donneePartie.stations[i].id));
             //order.push(new LoadingOrder(mesCamionsDispo[0].id,mesCamionsDispo[0].currentStation.id,1));
             mesCamionsDispo.shift();
+        }*/
+      else  if(mesCamionsDispo.length && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite"
+            &&GameUtils.getTravelDuration(mesCamionsDispo[0],donneePartie.stations[i].owner.name != "parasite"))
+        {
+            order.push(new MoveOrder(mesCamionsDispo[0].id, donneePartie.stations[i].id));
+            mesCamionsDispo.shift();
         }
 
         /*postMessage({'orders':order,'consoleMessage':'','error':''});*/
     }
+    for(i=0; i < donneePartie.stations[i].owner.name != "parasite";i++)
+    {
+        if(donneePartie.donneePartie.stations[i].owner.name != "parasite")
+        {
+            stationsEnnemis.push(donneePartie.station[i].owner.name != "parasite")
+        }
+    }
+
     this._turnNum++;
     return order;
 
 };
+
+
+
 
 /**
  * La Map
@@ -799,3 +819,10 @@ HxOverrides.remove = function(a,obj) {
 
 
 
+function getStationEnnemi(monId, stations){
+    var stationsEnnemi = [];
+    for (i = 0; i < stations.length; i++)
+        if(stations[i].owner && stations[i].owner.id != monId)
+            stationsEnnemi.push(stations[i]);
+    return stationsEnnemi;
+}
