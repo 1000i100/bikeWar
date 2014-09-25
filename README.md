@@ -5,7 +5,7 @@ Votre IA se trouve dans le fichier ia.js à la racine.
 Pour tester, lancer index.html et lancez la partie.
 
 Il est possible de passer des options à la partie via l'url :
-  index.html?start?j1=parasite.js?j2=otherIA/AQube_75.js?speed=1000?logData?trends=3
+  index.html?start?j1=conDeMime.js?j2=otherIA/AQube_75.js?speed=1000?logData?trends=3
 ceci lance automatiquement la partie au chargement de la page, fait s'opposer les deux ia correspondant aux fichiers demandés, fait s'executer la partie 1000x plus vite que normalement, affiche dans la console les données envoyées au workers et change le mode de remplissage des vélos dans les stations.
 
 Mode de remplissage des vélo dans les stations :

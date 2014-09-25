@@ -1,7 +1,5 @@
 var cloneWorker;
-
 if(typeof exports === 'undefined') exports = this;
-
 exports.onmessage = function (event) {
 	if (event.data != null) {
 		var monId = event.data.playerId;
