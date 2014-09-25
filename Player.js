@@ -363,10 +363,12 @@
 		com.tamina.bikewar.core.Global.IMG_BASE_PATH = imgBasePath;
 		com.tamina.bikewar.core.Global.SAVE_URL = savePath;
 	};
-	com.tamina.bikewar.PlayerUI.init = function (firstPlayerName, firstPlayerScript, secondPlayerName, secondPlayerScript, debugMode, speed, consoleLogData) {
+	com.tamina.bikewar.PlayerUI.init = function (firstPlayerName, firstPlayerScript, secondPlayerName, secondPlayerScript, debugMode, speed, trends, consoleLogData) {
 		if(!speed) speed = com.tamina.bikewar.game.Game.GAME_SPEED;
+		if(!trends) trends = false;
 		if(!consoleLogData) consoleLogData = false;
 		com.tamina.bikewar.game.Game.GAME_SPEED = speed;
+		com.tamina.bikewar.game.Game.TRENDS = trends;
 		com.tamina.bikewar.game.Game.CONSOLE_LOG_DATA = consoleLogData;
 
 		if (debugMode == null) debugMode = false;
@@ -637,22 +639,28 @@
 				this._IAList[1].send(this._data);
 			}
 		}, updateBikeStations: function () {
-			var _g1 = 0;
-			var _g = this._data.stations.length;
-			while (_g1 < _g) {
-				var i = _g1++;
+			function rollBikeStableChange(){
+				if(com.tamina.bikewar.game.Game.TRENDS<2) return Math.round(Math.random() * 2) - 1;
+				else return 0;
+			}
+			function rollBikeIncreasingChange(){
+				if(!com.tamina.bikewar.game.Game.TRENDS) return 0;
+				if(com.tamina.bikewar.game.Game.TRENDS<3) return Math.round(Math.random() * 3);
+				if(com.tamina.bikewar.game.Game.TRENDS==3) return 1;
+			}
+			for(var i=0; i<this._data.stations.length;i++){
 				var station = this._data.stations[i];
 				var trend = com.tamina.bikewar.game.GameUtils.getBikeStationTrend(station, this._data.currentTime);
 				var trendNum = 0;
 				switch (trend[1]) {
 					case 1:
-						Math.round(Math.random() * 3);
+						trendNum = rollBikeIncreasingChange();
 						break;
 					case 0:
-						-Math.round(Math.random() * 3);
+						trendNum = -rollBikeIncreasingChange();
 						break;
 					case 2:
-						trendNum = Math.round(Math.random() * 2) - 1;
+						trendNum = rollBikeStableChange();
 						break;
 				}
 				station.bikeNum += trendNum;

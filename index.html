@@ -129,6 +129,11 @@
              case 'speed':
                  var speed = parseFloat(value);
                  break;
+             case 'trends':
+             case 'tendances':
+                 var trends = 1;
+                 if(value) var trends = parseInt(value);
+                 break;
              case 'logData':
                  var consoleLogData = true;
                  break;
@@ -144,12 +149,13 @@
      if (!player2iaFile) player2iaFile = 'ia/concurrent.js';
      if (!debug) debug = false;
      if (!start) start = false;
+     if (!trends) trends = false;
      if (!speed) speed = 1;
      if (!consoleLogData) consoleLogData = false;
 
      // init
      var gameSpeed = 1000/speed;
-     com.tamina.bikewar.PlayerUI.init(player1Name, player1iaFile, player2Name, player2iaFile, debug, gameSpeed, consoleLogData);
+     com.tamina.bikewar.PlayerUI.init(player1Name, player1iaFile, player2Name, player2iaFile, debug, gameSpeed, trends, consoleLogData);
      if(start) com.tamina.bikewar.PlayerUI._renderer.start();
  </script>
 </body>
