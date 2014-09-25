@@ -42,8 +42,8 @@ onmessage = function (event) {
         var orders = [];
         var msg = "";
         try {
-         //orders = getOrders(turnMessage.data);
-         orders = suivre(turnMessage.data);
+            //orders = getOrders(turnMessage.data);
+            orders = suivre(id, turnMessage.data);
             msg = debugMessage;
         } catch (e) {
             msg = 'Error : ' + e;
@@ -92,43 +92,89 @@ var getOrders = function (context) {
     this._turnNum++;
     return result;
 };
-var suivre = function (donneePartie) {
+var suivre = function (monId, donneePartie) {
 
 //var str = "\n Station = "+JSON.stringify(donneePartie.stations);
 //postMessage({'orders':[],'consoleMessage':str,'error':''});
     var order = new Array();
-    var mesCamions = [];
-        for (i = 0; i < donneePartie.trucks.length; i++) {
+    var mesCamionsDispo = [];
+    var mesCamionsMouvant = [];
+    var stationsEnnemis = getStationEnnemis(monId, donneePartie.stations);
+    var mouvement= getToStationEnnemis(mesCamionsDispo, donneePartie.stations);
+    for (i = 0; i < donneePartie.trucks.length; i++) {
         if (donneePartie.trucks[i].owner.name == "parasite" && donneePartie.trucks[i].currentStation != null) {
-            mesCamions.push(donneePartie.trucks[i]);
+            mesCamionsDispo.push(donneePartie.trucks[i]);
+        }
+        if (donneePartie.trucks[i].owner.name == "parasite" && donneePartie.trucks[i].destination != null) {
+            mesCamionsMouvant.push(donneePartie.trucks[i]);
         }
     }
 
     for (i = 0; i < donneePartie.stations.length; i++) {
-        if(mesCamions.length&&mesCamions[0].currentStation.bikeNum>0&&mesCamions[0].bikeNum<1 && mesCamions[0].currentStation.owner && mesCamions[0].currentStation.owner.name != "parasite" ){
-           order.push(new LoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
-
-        mesCamions.shift();
-
-        }
-       else if(mesCamions.length&&mesCamions[0].currentStation.slotNum>0&&mesCamions[0].bikeNum>0)
+        if(mesCamionsDispo.length&&mesCamionsDispo[0].currentStation.bikeNum>0&&mesCamionsDispo[0].bikeNum<1
+            && mesCamionsDispo[0].currentStation.owner &&mesCamionsDispo[0].currentStation.owner.id == stationsEnnemis.stations)
         {
-            order.push(new UnLoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
-            mesCamions.shift();
+            order.push(new LoadingOrder(mesCamionsDispo[0].id,mesCamionsDispo[0].currentStation.id,1));
+
+            mesCamionsDispo.shift();
+        }
+        else if(mesCamionsDispo.length&&mesCamionsDispo[0].currentStation.slotNum>0&&mesCamionsDispo[0].bikeNum>0)
+        {
+            order.push(new UnLoadingOrder(mesCamionsDispo[0].id,mesCamionsDispo[0].currentStation.id,1));
+            mesCamionsDispo.shift();
         }
 
-      else  if (mesCamions.length && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite") {
-            order.push(new MoveOrder(mesCamions[0].id, donneePartie.stations[i].id));
-            //order.push(new LoadingOrder(mesCamions[0].id,mesCamions[0].currentStation.id,1));
-            mesCamions.shift();
+         else if (mesCamionsDispo.length && stationsEnnemis.stations
+         && ( !mesCamionsMouvant.length
+         || (mesCamionsMouvant.length && mesCamionsMouvant[0].destination.id != donneePartie.stations[i].id))) {
+            mouvement;
+         //order.push(new LoadingOrder(mesCamionsDispo[0].id,mesCamionsDispo[0].currentStation.id,1));
+         mesCamionsDispo.shift();
+         }
+        /*else  if(mesCamionsDispo.length && donneePartie.stations[i].owner && donneePartie.stations[i].owner.name != "parasite"
+            &&GameUtils.getTravelDuration(mesCamionsDispo[0],donneePartie.stations[i].owner.id != monId))
+        {
+            order.push(new MoveOrder(mesCamionsDispo[0].id, donneePartie.stations[i].id));
+            mesCamionsDispo.shift();
         }
+        for(i=0; i < donneePartie.stations[i].owner.name != "parasite";i++)
+        {
+            if(donneePartie.donneePartie.stations[i].owner.name != "parasite")
+            {
+                stationsEnnemis.push(donneePartie.station[i].owner.name != "parasite")
+            }
+        }
+        /*postMessage({'orders':order,'consoleMessage':'','error':''});*/
 
-    /*postMessage({'orders':order,'consoleMessage':'','error':''});*/
     }
+
+
     this._turnNum++;
     return order;
 
 };
+function getStationEnnemis(monId, stations){
+    var stationsEnnemis = [];
+    for (i = 0; i < stations.length; i++)
+        if(stations[i].owner && stations[i].owner.id != monId)
+            stationsEnnemis.push(stations[i]);
+    return stationsEnnemis;
+}
+
+function envoyerSiPossibleCamionVersStationAdverse(CamionsDispo, stationEnnemis){
+
+    //var stationEnnemis = getStationEnnemis(mesCamionsDispo, stationEnnemis);
+    for (i =0 ; i < stationEnnemis.length; i++)
+        if(mesCamionsDispo.length && stationEnnemis.length)
+            order.push(new MoveOrder(mesCamionsDispo[0].id, stationEnnemis[0].id));
+}
+function prendreUnVelo(monCamion,orders){
+
+    //for (i = 0; i < donneePartie.stations.length; i++)
+        if(monCamion.currentStation.bikeNum>0)
+            orders.push(new LoadingOrder(monCamion.id,monCamion.currentStation.id,1));
+    return orders
+}
 
 /**
  * La Map
