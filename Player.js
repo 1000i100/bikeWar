@@ -363,12 +363,14 @@
 		com.tamina.bikewar.core.Global.IMG_BASE_PATH = imgBasePath;
 		com.tamina.bikewar.core.Global.SAVE_URL = savePath;
 	};
-	com.tamina.bikewar.PlayerUI.init = function (firstPlayerName, firstPlayerScript, secondPlayerName, secondPlayerScript, debugMode, speed, trends, consoleLogData) {
+	com.tamina.bikewar.PlayerUI.init = function (firstPlayerName, firstPlayerScript, secondPlayerName, secondPlayerScript, debugMode, speed, trends, color, consoleLogData) {
 		if(!speed) speed = com.tamina.bikewar.game.Game.GAME_SPEED;
 		if(!trends) trends = false;
+		if(!color) color = false;
 		if(!consoleLogData) consoleLogData = false;
 		com.tamina.bikewar.game.Game.GAME_SPEED = speed;
 		com.tamina.bikewar.game.Game.TRENDS = trends;
+		com.tamina.bikewar.game.Game.COLOR_MODE = color;
 		com.tamina.bikewar.game.Game.CONSOLE_LOG_DATA = consoleLogData;
 
 		if (debugMode == null) debugMode = false;
@@ -3367,12 +3369,18 @@
 		createjs.Container.call(this);
 		this._data = data;
 		this._currentTime = currentTime;
+		this.badBgImg = new createjs.Bitmap(com.tamina.bikewar.core.Global.IMG_BASE_PATH + "images/stationBackground_bad.png");
+		this.midBgImg = new createjs.Bitmap(com.tamina.bikewar.core.Global.IMG_BASE_PATH + "images/stationBackground_mid.png");
+		this.goodBgImg = new createjs.Bitmap(com.tamina.bikewar.core.Global.IMG_BASE_PATH + "images/stationBackground_good.png");
 		this._defaultBackgroundBitmap = new createjs.Bitmap(com.tamina.bikewar.core.Global.IMG_BASE_PATH + "images/stationBackground_defaut.png");
 		this._outBackgroundBitmap = new createjs.Bitmap(com.tamina.bikewar.core.Global.IMG_BASE_PATH + "images/stationBackground_out.png");
 		this._player0Bitmap = new createjs.Bitmap(com.tamina.bikewar.core.Global.IMG_BASE_PATH + "images/stationFlag_0.png");
 		this._player1Bitmap = new createjs.Bitmap(com.tamina.bikewar.core.Global.IMG_BASE_PATH + "images/stationFlag_1.png");
 		this._backgroundContainer = new createjs.Container();
 		this.addChild(this._backgroundContainer);
+		this._backgroundContainer.addChild(this.goodBgImg);
+		this._backgroundContainer.addChild(this.midBgImg);
+		this._backgroundContainer.addChild(this.badBgImg);
 		this._ownerFlagContainer = new createjs.Container();
 		this.addChild(this._ownerFlagContainer);
 		this._label = new createjs.Text();
@@ -3388,6 +3396,15 @@
 	$hxClasses["com.tamina.bikewar.ui.BikeStationSprite"] = com.tamina.bikewar.ui.BikeStationSprite;
 	com.tamina.bikewar.ui.BikeStationSprite.__name__ = ["com", "tamina", "bikewar", "ui", "BikeStationSprite"];
 	com.tamina.bikewar.ui.BikeStationSprite.__super__ = createjs.Container;
+	function getDistanceAuxLimites(station){
+		return Math.min(station.bikeNum, station.slotNum - station.bikeNum);
+	}
+	function getTailleStation(station){return station.slotNum;}
+	function getPrécaritéStation(station){
+		var min = 14;
+		var max = 41;
+		return ((max-min) - (getTailleStation(station)-min) )/(max-min);
+	}
 	com.tamina.bikewar.ui.BikeStationSprite.prototype = $extend(createjs.Container.prototype, {
 		updateData: function (currentTime) {
 			this._label.text = Std.string(this._data.bikeNum);
@@ -3402,10 +3419,44 @@
 				this._ownerFlagContainer.addChild(targetFlag);
 			}
 		}, updateBackground: function () {
-			this._backgroundContainer.removeAllChildren();
-			var targetBackground = this._defaultBackgroundBitmap;
-			if (!com.tamina.bikewar.game.GameUtils.hasStationEnoughBike(this._data)) targetBackground = this._outBackgroundBitmap;
-			this._backgroundContainer.addChild(targetBackground);
+			var color = com.tamina.bikewar.game.Game.COLOR_MODE;
+			if(!color){
+				this._backgroundContainer.removeAllChildren();
+				var targetBackground = this._defaultBackgroundBitmap;
+				if (!com.tamina.bikewar.game.GameUtils.hasStationEnoughBike(this._data)) targetBackground = this._outBackgroundBitmap;
+				this._backgroundContainer.addChild(targetBackground);
+			}
+			if(color===1) {
+				this._backgroundContainer.children[1].alpha = Math.pow(1-Math.min(1, Math.max(0,(getDistanceAuxLimites(this._data)-3)/6)),0.7);
+				this._backgroundContainer.children[2].alpha = 1-Math.min(1, getDistanceAuxLimites(this._data)/3);
+			}
+			if(color===2) {
+				this._backgroundContainer.children[1].alpha = Math.pow(Math.min(1,getPrécaritéStation(this._data)*2),0.7);
+				this._backgroundContainer.children[2].alpha = Math.max(0,getPrécaritéStation(this._data)*2-1);
+			}
+			if(color===3) {
+				var trend = com.tamina.bikewar.game.GameUtils.getBikeStationTrend(this._data, this._currentTime)[0];
+				switch(trend){
+					case 'INCREASE':
+						this._backgroundContainer.children[1].alpha = 1;
+						this._backgroundContainer.children[2].alpha = 0;
+						break;
+					case 'DECREASE':
+						this._backgroundContainer.children[2].alpha = 1;
+						break;
+					case 'STABLE':
+					default:
+						this._backgroundContainer.children[1].alpha = 0;
+						this._backgroundContainer.children[2].alpha = 0;
+				}
+			}
+			if(color>=14){
+				var tailleStation =  getTailleStation(this._data);
+				var delta = tailleStation - color;
+				var étalement = 3;
+				this._backgroundContainer.children[1].alpha = Math.pow(1-Math.min(1,Math.max(0,delta/étalement)),0.7);
+				this._backgroundContainer.children[2].alpha = Math.min(1,Math.max(0,-delta/étalement));
+			}
 		}, __class__: com.tamina.bikewar.ui.BikeStationSprite
 	});
 	com.tamina.bikewar.ui.JunctionShape = function (data) {
