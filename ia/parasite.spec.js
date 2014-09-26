@@ -1,4 +1,4 @@
-﻿describe("IA Parasite", function() {
+describe("IA Parasite", function() {
 	beforeEach(function() {
 		jasmine.addMatchers({
 			toDeepEqual: function() {
@@ -25,6 +25,29 @@
 			var listeStationEnnemi = [{owner:{id:3}}]
 			expect(getStationEnnemis(monId, listeStation)).toEqual(listeStationEnnemi);
 		});
+		it("liste les camions qui m'appartiennent", function() {
+			var monId = 1;
+			var listeCamions = [{owner:{id:1}},{owner:{id:2}}];
+			var listeMesCamions = [{owner:{id:1}}];
+			expect(getMesCamions(monId, listeCamions)).toEqual(listeMesCamions);
+		});
+		it("liste les camions qui m'appartiennent même s'il y en as plusieurs", function() {
+			var monId = 1;
+			var listeCamions = [{owner:{id:1}},{owner:{id:1}},{owner:{id:2}}];
+			var listeMesCamions = [{owner:{id:1}},{owner:{id:1}}];
+			expect(getMesCamions(monId, listeCamions)).toEqual(listeMesCamions);
+		});
+		it("liste les camions qui sont à l'arrêt", function() {
+			var listeCamions = [{currentStation:{}},{}];
+			var listeCamionsArrêtés = [{currentStation:{}}];
+			expect(getCamionsArrêtés(listeCamions)).toEqual(listeCamionsArrêtés);
+		});
+		it("liste les camions qui sont en mouvement", function() {
+			var listeCamions = [{destination:{}},{}];
+			var listeCamionsEnMouvement = [{destination:{}}];
+			expect(getCamionsEnMouvement(listeCamions)).toEqual(listeCamionsEnMouvement);
+		});
+
 	});
 	describe("ordres conditionnés", function() {
 		xit("mouvement", function() {
