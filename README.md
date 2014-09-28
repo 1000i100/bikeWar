@@ -10,8 +10,8 @@ ceci lance automatiquement la partie au chargement de la page, fait s'opposer le
 
 Mode de remplissage des vélo dans les stations :
 
-- trends=0 (ou absent) : mode par défaut, seule les station stable varie de -1 0 ou +1 vélo.
-- trends=1 : stable -1 0 +1, montante 0 +1 +2 +3, descendante 0 -1 -2 -3
+- trends=0 : mode par défaut, seule les station stable varie de -1 0 ou +1 vélo.
+- trends=1 (ou absent) : stable -1 0 +1, montante 0 +1 +2 +3, descendante 0 -1 -2 -3
 - trends=2 : stable 0, montante 0 +1 +2 +3, descendante 0 -1 -2 -3
 - trends=3 : stable 0, montante +1, descendante -1 (pas d'aléatoire)
 

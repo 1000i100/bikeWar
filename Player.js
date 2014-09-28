@@ -1,25 +1,15 @@
-(function ($hx_exports) {
-	"use strict";
+(function ($hx_exports) { "use strict";
 	$hx_exports.com = $hx_exports.com || {};
 	$hx_exports.com.tamina = $hx_exports.com.tamina || {};
 	$hx_exports.com.tamina.bikewar = $hx_exports.com.tamina.bikewar || {};
-	var $hxClasses = {}, $estr = function () {
-		return js.Boot.__string_rec(this, '');
-	};
-
+	var $hxClasses = {}, $estr = function () { return js.Boot.__string_rec(this, ''); };
 	function $extend(from, fields) {
-		function Inherit() {
-		}
-
-		Inherit.prototype = from;
-		var proto = new Inherit();
+		function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 		for (var name in fields) proto[name] = fields[name];
-		if (fields.toString !== Object.prototype.toString) proto.toString = fields.toString;
+		if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 		return proto;
 	}
-
-	var HxOverrides = function () {
-	};
+	var HxOverrides = function () { };
 	$hxClasses["HxOverrides"] = HxOverrides;
 	HxOverrides.__name__ = ["HxOverrides"];
 	HxOverrides.dateStr = function (date) {
@@ -92,8 +82,7 @@
 			return this.arr[this.cur++];
 		}};
 	};
-	var Lambda = function () {
-	};
+	var Lambda = function () { };
 	$hxClasses["Lambda"] = Lambda;
 	Lambda.__name__ = ["Lambda"];
 	Lambda.exists = function (it, f) {
@@ -104,7 +93,7 @@
 		}
 		return false;
 	};
-	Lambda.filter = function (it, f) {
+	Lambda.filter = function (it,f) {
 		var l = new List();
 		var $it0 = $iterator(it)();
 		while ($it0.hasNext()) {
@@ -140,26 +129,24 @@
 			}};
 		}, __class__: List
 	};
-	var IMap = function () {
-	};
+	var IMap = function () { };
 	$hxClasses["IMap"] = IMap;
 	IMap.__name__ = ["IMap"];
 	IMap.prototype = {
 		__class__: IMap
 	};
 	Math.__name__ = ["Math"];
-	var Reflect = function () {
-	};
+	var Reflect = function () { };
 	$hxClasses["Reflect"] = Reflect;
 	Reflect.__name__ = ["Reflect"];
-	Reflect.field = function (o, field) {
+	Reflect.field = function (o,field) {
 		try {
 			return o[field];
 		} catch (e) {
 			return null;
 		}
 	};
-	Reflect.setField = function (o, field, value) {
+	Reflect.setField = function (o,field,value) {
 		o[field] = value;
 	};
 	Reflect.fields = function (o) {
@@ -185,8 +172,7 @@
 		delete(o[field]);
 		return true;
 	};
-	var Std = function () {
-	};
+	var Std = function () { };
 	$hxClasses["Std"] = Std;
 	Std.__name__ = ["Std"];
 	Std.string = function (s) {
@@ -245,23 +231,12 @@
 	ValueType.TFunction = ["TFunction", 5];
 	ValueType.TFunction.toString = $estr;
 	ValueType.TFunction.__enum__ = ValueType;
-	ValueType.TClass = function (c) {
-		var $x = ["TClass", 6, c];
-		$x.__enum__ = ValueType;
-		$x.toString = $estr;
-		return $x;
-	};
-	ValueType.TEnum = function (e) {
-		var $x = ["TEnum", 7, e];
-		$x.__enum__ = ValueType;
-		$x.toString = $estr;
-		return $x;
-	};
+	ValueType.TClass = function (c) { var $x = ["TClass", 6, c]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; };
+	ValueType.TEnum = function (e) { var $x = ["TEnum", 7, e]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; };
 	ValueType.TUnknown = ["TUnknown", 8];
 	ValueType.TUnknown.toString = $estr;
 	ValueType.TUnknown.__enum__ = ValueType;
-	var Type = function () {
-	};
+	var Type = function () { };
 	$hxClasses["Type"] = Type;
 	Type.__name__ = ["Type"];
 	Type.getClass = function (o) {
@@ -287,8 +262,7 @@
 		return e;
 	};
 	Type.createEmptyInstance = function (cl) {
-		function empty() {
-		};
+		function empty() { }
 		empty.prototype = cl.prototype;
 		return new empty();
 	};
@@ -340,8 +314,7 @@
 		return e.slice(2);
 	};
 	var XmlType = $hxClasses["XmlType"] = { __ename__: ["XmlType"], __constructs__: [] };
-	var Xml = function () {
-	};
+	var Xml = function () { };
 	$hxClasses["Xml"] = Xml;
 	Xml.__name__ = ["Xml"];
 	var com = {};
@@ -495,6 +468,7 @@
 		}, executeIAOrders: function (ordersOwner) {
 			var orders = ordersOwner.get_turnOrders();
 			if (orders.length > 2) {
+				haxe.Log.trace("orders list trop grande",{ fileName : "BaseGameEngine.hx", lineNumber : 180, className : "com.tamina.bikewar.core.BaseGameEngine", methodName : "executeIAOrders"});
 				if (ordersOwner.get_playerId() == this.playerList[0].player.id) {
 					this.playerList[0].score = -100;
 					this.endBattle(new com.tamina.bikewar.data.BattleResult(this.playerList, this._currentTurn, this.playerList[1].player, "Son adversaire a dépassé le nombre d'ordre authorisé"));
@@ -527,8 +501,7 @@
 							target.bikeNum += lo1.bikeNum;
 							target.owner = source.owner;
 							source.destination = null;
-						} else {
-						}
+						} else haxe.Log.trace("order type inconnu",{ fileName : "BaseGameEngine.hx", lineNumber : 212, className : "com.tamina.bikewar.core.BaseGameEngine", methodName : "executeIAOrders"});
 					} else if (ordersOwner.get_playerId() == this.playerList[0].player.id) {
 						this.playerList[0].score = -100;
 						this.endBattle(new com.tamina.bikewar.data.BattleResult(this.playerList, this._currentTurn, this.playerList[1].player, "Son adversaire a construit un ordre invalide"));
@@ -734,8 +707,7 @@
 			this._display.updateData();
 		}, __class__: com.tamina.bikewar.core.BattleRenderer
 	};
-	com.tamina.bikewar.core.Global = function () {
-	};
+	com.tamina.bikewar.core.Global = function () { };
 	$hxClasses["com.tamina.bikewar.core.Global"] = com.tamina.bikewar.core.Global;
 	com.tamina.bikewar.core.Global.__name__ = ["com", "tamina", "bikewar", "core", "Global"];
 	com.tamina.bikewar.core.LiveGameEngine = function () {
@@ -857,8 +829,7 @@
 	com.tamina.bikewar.data.BikeStation.prototype = {
 		__class__: com.tamina.bikewar.data.BikeStation
 	};
-	com.tamina.bikewar.data.IIA = function () {
-	};
+	com.tamina.bikewar.data.IIA = function () { };
 	$hxClasses["com.tamina.bikewar.data.IIA"] = com.tamina.bikewar.data.IIA;
 	com.tamina.bikewar.data.IIA.__name__ = ["com", "tamina", "bikewar", "data", "IIA"];
 	com.tamina.bikewar.data.IIA.prototype = {
@@ -946,8 +917,7 @@
 	com.tamina.bikewar.data.MapData.prototype = {
 		__class__: com.tamina.bikewar.data.MapData
 	};
-	com.tamina.bikewar.data.Mock = function () {
-	};
+	com.tamina.bikewar.data.Mock = function () { };
 	$hxClasses["com.tamina.bikewar.data.Mock"] = com.tamina.bikewar.data.Mock;
 	com.tamina.bikewar.data.Mock.__name__ = ["com", "tamina", "bikewar", "data", "Mock"];
 	com.tamina.bikewar.data.Mock.get_profiles = function () {
@@ -3090,8 +3060,7 @@
 	com.tamina.bikewar.data.MoveOrder.prototype = $extend(com.tamina.bikewar.data.Order.prototype, {
 		__class__: com.tamina.bikewar.data.MoveOrder
 	});
-	com.tamina.bikewar.data.OrderType = function () {
-	};
+	com.tamina.bikewar.data.OrderType = function () { };
 	$hxClasses["com.tamina.bikewar.data.OrderType"] = com.tamina.bikewar.data.OrderType;
 	com.tamina.bikewar.data.OrderType.__name__ = ["com", "tamina", "bikewar", "data", "OrderType"];
 	com.tamina.bikewar.data.Path = function (content) {
@@ -3166,8 +3135,7 @@
 			return result;
 		}, __class__: com.tamina.bikewar.data.Player
 	};
-	com.tamina.bikewar.data.PlayerColor = function () {
-	};
+	com.tamina.bikewar.data.PlayerColor = function () { };
 	$hxClasses["com.tamina.bikewar.data.PlayerColor"] = com.tamina.bikewar.data.PlayerColor;
 	com.tamina.bikewar.data.PlayerColor.__name__ = ["com", "tamina", "bikewar", "data", "PlayerColor"];
 	com.tamina.bikewar.data.PlayerResult = function (player) {
@@ -3189,8 +3157,7 @@
 	com.tamina.bikewar.data.Trend.STABLE = ["STABLE", 2];
 	com.tamina.bikewar.data.Trend.STABLE.toString = $estr;
 	com.tamina.bikewar.data.Trend.STABLE.__enum__ = com.tamina.bikewar.data.Trend;
-	com.tamina.bikewar.data.Trends = function () {
-	};
+	com.tamina.bikewar.data.Trends = function () { };
 	$hxClasses["com.tamina.bikewar.data.Trends"] = com.tamina.bikewar.data.Trends;
 	com.tamina.bikewar.data.Trends.__name__ = ["com", "tamina", "bikewar", "data", "Trends"];
 	com.tamina.bikewar.data.Trends.fromInt = function (value) {
@@ -3288,8 +3255,7 @@
 		}, __class__: com.tamina.bikewar.data.vo.BikeStationVO
 	};
 	com.tamina.bikewar.game = {};
-	com.tamina.bikewar.game.Game = function () {
-	};
+	com.tamina.bikewar.game.Game = function () { };
 	$hxClasses["com.tamina.bikewar.game.Game"] = com.tamina.bikewar.game.Game;
 	com.tamina.bikewar.game.Game.__name__ = ["com", "tamina", "bikewar", "game", "Game"];
 	com.tamina.bikewar.game.Game.get_START_POINTS = function () {
@@ -3298,8 +3264,7 @@
 		result.push(new org.tamina.geom.Point(100, 500));
 		return result;
 	};
-	com.tamina.bikewar.game.GameUtils = function () {
-	};
+	com.tamina.bikewar.game.GameUtils = function () { };
 	$hxClasses["com.tamina.bikewar.game.GameUtils"] = com.tamina.bikewar.game.GameUtils;
 	com.tamina.bikewar.game.GameUtils.__name__ = ["com", "tamina", "bikewar", "game", "GameUtils"];
 	com.tamina.bikewar.game.GameUtils.getTravelDuration = function (source, target, map) {
@@ -3734,8 +3699,7 @@
 			org.tamina.log.QuickLogger.info("move ended");
 		}, __class__: com.tamina.bikewar.ui.TruckSprite
 	});
-	com.tamina.bikewar.ui.UIElementId = function () {
-	};
+	com.tamina.bikewar.ui.UIElementId = function () { };
 	$hxClasses["com.tamina.bikewar.ui.UIElementId"] = com.tamina.bikewar.ui.UIElementId;
 	com.tamina.bikewar.ui.UIElementId.__name__ = ["com", "tamina", "bikewar", "ui", "UIElementId"];
 	var haxe = {};
@@ -3743,32 +3707,11 @@
 	haxe.StackItem.CFunction = ["CFunction", 0];
 	haxe.StackItem.CFunction.toString = $estr;
 	haxe.StackItem.CFunction.__enum__ = haxe.StackItem;
-	haxe.StackItem.Module = function (m) {
-		var $x = ["Module", 1, m];
-		$x.__enum__ = haxe.StackItem;
-		$x.toString = $estr;
-		return $x;
-	};
-	haxe.StackItem.FilePos = function (s, file, line) {
-		var $x = ["FilePos", 2, s, file, line];
-		$x.__enum__ = haxe.StackItem;
-		$x.toString = $estr;
-		return $x;
-	};
-	haxe.StackItem.Method = function (classname, method) {
-		var $x = ["Method", 3, classname, method];
-		$x.__enum__ = haxe.StackItem;
-		$x.toString = $estr;
-		return $x;
-	};
-	haxe.StackItem.LocalFunction = function (v) {
-		var $x = ["LocalFunction", 4, v];
-		$x.__enum__ = haxe.StackItem;
-		$x.toString = $estr;
-		return $x;
-	};
-	haxe.CallStack = function () {
-	};
+	haxe.StackItem.Module = function (m) { var $x = ["Module", 1, m]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; };
+	haxe.StackItem.FilePos = function (s, file, line) { var $x = ["FilePos", 2, s, file, line]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; };
+	haxe.StackItem.Method = function (classname, method) { var $x = ["Method", 3, classname, method]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; };
+	haxe.StackItem.LocalFunction = function (v) { var $x = ["LocalFunction", 4, v]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; };
+	haxe.CallStack = function () { };
 	$hxClasses["haxe.CallStack"] = haxe.CallStack;
 	haxe.CallStack.__name__ = ["haxe", "CallStack"];
 	haxe.CallStack.callStack = function () {
@@ -3897,8 +3840,7 @@
 		}, onStatus: function (status) {
 		}, __class__: haxe.Http
 	};
-	haxe.Log = function () {
-	};
+	haxe.Log = function () { };
 	$hxClasses["haxe.Log"] = haxe.Log;
 	haxe.Log.__name__ = ["haxe", "Log"];
 	haxe.Log.trace = function (v, infos) {
@@ -4531,8 +4473,7 @@
 		}, __class__: haxe.io.Bytes
 	};
 	var js = {};
-	js.Boot = function () {
-	};
+	js.Boot = function () { };
 	$hxClasses["js.Boot"] = js.Boot;
 	js.Boot.__name__ = ["js", "Boot"];
 	js.Boot.__unhtml = function (s) {
@@ -4666,8 +4607,7 @@
 				return o.__enum__ == cl;
 		}
 	};
-	js.Browser = function () {
-	};
+	js.Browser = function () { };
 	$hxClasses["js.Browser"] = js.Browser;
 	js.Browser.__name__ = ["js", "Browser"];
 	js.Browser.createXMLHttpRequest = function () {
@@ -4732,8 +4672,7 @@
 			throw "method not implemented in ConsolePrinterBase";
 		}, __class__: mconsole.PrinterBase
 	};
-	mconsole.Printer = function () {
-	};
+	mconsole.Printer = function () { };
 	$hxClasses["mconsole.Printer"] = mconsole.Printer;
 	mconsole.Printer.__name__ = ["mconsole", "Printer"];
 	mconsole.Printer.prototype = {
@@ -4796,8 +4735,7 @@
 			window.document.body.removeChild(this.element);
 		}, __class__: mconsole.ConsoleView
 	});
-	mconsole.Console = function () {
-	};
+	mconsole.Console = function () { };
 	$hxClasses["mconsole.Console"] = mconsole.Console;
 	mconsole.Console.__name__ = ["mconsole", "Console"];
 	mconsole.Console.start = function () {
@@ -5005,8 +4943,7 @@
 		}
 		return value;
 	};
-	mconsole.ConsoleMacro = function () {
-	};
+	mconsole.ConsoleMacro = function () { };
 	$hxClasses["mconsole.ConsoleMacro"] = mconsole.ConsoleMacro;
 	mconsole.ConsoleMacro.__name__ = ["mconsole", "ConsoleMacro"];
 	mconsole.LogLevel = $hxClasses["mconsole.LogLevel"] = { __ename__: ["mconsole", "LogLevel"], __constructs__: ["log", "info", "debug", "warn", "error"] };
@@ -5044,8 +4981,7 @@
 	mconsole.ConsoleColor.red = ["red", 5];
 	mconsole.ConsoleColor.red.toString = $estr;
 	mconsole.ConsoleColor.red.__enum__ = mconsole.ConsoleColor;
-	mconsole.StackHelper = function () {
-	};
+	mconsole.StackHelper = function () { };
 	$hxClasses["mconsole.StackHelper"] = mconsole.StackHelper;
 	mconsole.StackHelper.__name__ = ["mconsole", "StackHelper"];
 	mconsole.StackHelper.createFilters = function () {
@@ -5056,8 +4992,7 @@
 	mconsole.StackHelper.toString = function (stack) {
 		return "null";
 	};
-	mconsole.StackItemHelper = function () {
-	};
+	mconsole.StackItemHelper = function () { };
 	$hxClasses["mconsole.StackItemHelper"] = mconsole.StackItemHelper;
 	mconsole.StackItemHelper.__name__ = ["mconsole", "StackItemHelper"];
 	mconsole.StackItemHelper.toString = function (item, isFirst) {
@@ -5345,8 +5280,7 @@
 	var org = {};
 	org.tamina = {};
 	org.tamina.events = {};
-	org.tamina.events.CreateJSEvent = function () {
-	};
+	org.tamina.events.CreateJSEvent = function () { };
 	$hxClasses["org.tamina.events.CreateJSEvent"] = org.tamina.events.CreateJSEvent;
 	org.tamina.events.CreateJSEvent.__name__ = ["org", "tamina", "events", "CreateJSEvent"];
 	org.tamina.geom = {};
@@ -5377,15 +5311,13 @@
 	});
 	org.tamina.log = {};
 	org.tamina.log._LogLevel = {};
-	org.tamina.log._LogLevel.LogLevel_Impl_ = function () {
-	};
+	org.tamina.log._LogLevel.LogLevel_Impl_ = function () { };
 	$hxClasses["org.tamina.log._LogLevel.LogLevel_Impl_"] = org.tamina.log._LogLevel.LogLevel_Impl_;
 	org.tamina.log._LogLevel.LogLevel_Impl_.__name__ = ["org", "tamina", "log", "_LogLevel", "LogLevel_Impl_"];
 	org.tamina.log._LogLevel.LogLevel_Impl_.compareMinusOrEqual = function (this1, target) {
 		return this1 <= target;
 	};
-	org.tamina.log.QuickLogger = function () {
-	};
+	org.tamina.log.QuickLogger = function () { };
 	$hxClasses["org.tamina.log.QuickLogger"] = org.tamina.log.QuickLogger;
 	org.tamina.log.QuickLogger.__name__ = ["org", "tamina", "log", "QuickLogger"];
 	org.tamina.log.QuickLogger.info = function (message, source) {
@@ -5425,8 +5357,7 @@
 		org.tamina.log.QuickLogger._startProfilingDate = new Date();
 	};
 	org.tamina.utils = {};
-	org.tamina.utils.DateUtils = function () {
-	};
+	org.tamina.utils.DateUtils = function () { };
 	$hxClasses["org.tamina.utils.DateUtils"] = org.tamina.utils.DateUtils;
 	org.tamina.utils.DateUtils.__name__ = ["org", "tamina", "utils", "DateUtils"];
 	org.tamina.utils.DateUtils.hourToFrenchString = function (pDate) {
@@ -5445,8 +5376,7 @@
 		if (pDate.getDate() < 10) day = "0" + day;
 		return day + "/" + month + "/" + pDate.getFullYear();
 	};
-	org.tamina.utils.UID = function () {
-	};
+	org.tamina.utils.UID = function () { };
 	$hxClasses["org.tamina.utils.UID"] = org.tamina.utils.UID;
 	org.tamina.utils.UID.__name__ = ["org", "tamina", "utils", "UID"];
 	org.tamina.utils.UID.getUID = function () {
@@ -5471,31 +5401,9 @@
 			return this.getChildAt(index);
 		}, __class__: org.tamina.view.Group
 	});
-	function $iterator(o) {
-		if (o instanceof Array) return function () {
-			return HxOverrides.iter(o);
-		};
-		return typeof(o.iterator) == 'function' ? $bind(o, o.iterator) : o.iterator;
-	}
-
+	function $iterator(o) { if (o instanceof Array) return function () { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o, o.iterator) : o.iterator; }
 	var $_, $fid = 0;
-
-	function $bind(o, m) {
-		if (m == null) return null;
-		if (m.__id__ == null) m.__id__ = $fid++;
-		var f;
-		if (o.hx__closures__ == null) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__];
-		if (f == null) {
-			f = function () {
-				return f.method.apply(f.scope, arguments);
-			};
-			f.scope = o;
-			f.method = m;
-			o.hx__closures__[m.__id__] = f;
-		}
-		return f;
-	}
-
+	function $bind(o, m) { if (m == null) return null; if (m.__id__ == null) m.__id__ = $fid++; var f; if (o.hx__closures__ == null) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if (f == null) { f = function () { return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 	if (Array.prototype.indexOf) HxOverrides.indexOf = function (a, o, i) {
 		return Array.prototype.indexOf.call(a, o, i);
 	};
