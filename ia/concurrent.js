@@ -63,31 +63,28 @@ var _movingTruckId = new Array();
  * @return    result {Array<Order>} la liste des ordres à exécuter ce tour
  */
 var getOrders = function (context) {
-    var result = new Array();
-    var _g1 = 0;
-    var _g = context.trucks.length;
-    while(_g1 < _g) {
-        var i = _g1++;
+    var ordres = new Array();
+		for(var i = 0; i<context.trucks.length;i++) {
         var truck = context.trucks[i];
         if(truck.owner.id == this.id && truck.currentStation != null) {
             if(this._movingTruckId.indexOf(truck.id) > -1) {
                 HxOverrides.remove(this._movingTruckId,truck.id);
                 if(truck.currentStation.bikeNum < truck.currentStation.slotNum / 4) {
-                    if(truck.bikeNum > 0) result.push(new UnLoadingOrder(truck.id,truck.currentStation.id,1));
+                    if(truck.bikeNum > 0) ordres.push(new UnLoadingOrder(truck.id,truck.currentStation.id,1));
                 } else if(truck.currentStation.bikeNum > truck.currentStation.slotNum / 4 * 3) {
-                    if(truck.bikeNum < Game.TRUCK_NUM_SLOT) result.push(new LoadingOrder(truck.id,truck.currentStation.id,1));
+                    if(truck.bikeNum < Game.TRUCK_NUM_SLOT) ordres.push(new LoadingOrder(truck.id,truck.currentStation.id,1));
                 } else if(GameUtils.hasStationEnoughBike(truck.currentStation)) {
-                    if(truck.bikeNum < Game.TRUCK_NUM_SLOT) result.push(new LoadingOrder(truck.id,truck.currentStation.id,1));
+                    if(truck.bikeNum < Game.TRUCK_NUM_SLOT) ordres.push(new LoadingOrder(truck.id,truck.currentStation.id,1));
                 }
             } else {
                 this._movingTruckId.push(truck.id);
-                result.push(new MoveOrder(truck.id,context.stations[Math.round(Math.random() * context.stations.length)].id));
+                ordres.push(new MoveOrder(truck.id,context.stations[Math.round(Math.random() * context.stations.length)].id));
             }
         } else {
         }
     }
     this._turnNum++;
-    return result;
+    return ordres;
 };
 
 /**
