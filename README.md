@@ -18,17 +18,14 @@ Mode de remplissage des vélo dans les stations :
 Mode de coloration des stations :
 
 - color=0 (ou absent) : mode par défaut, les stations sont jaunes si elles ont moins de 1/4 ou + de 3/4 de leur capacité rempli de vélo.
-- color=1 : les stations sont rouge si vide ou pleine puis passe progressivement au jaune puis au vert quand elle s'éloigne des cas génant (3 vélo d'écrat pour jaune, 6 pour vert).
+- color=1 : les stations sont rouge si vide ou pleine puis passe progressivement au jaune puis au vert quand elle s'éloigne des cas gênant (3 vélo d'écrat pour jaune, 6 pour vert).
 - color=2 : les stations sont coloré selon leur capacité maximum en vélo (vert 41, rouge 14 dégradé passant par le jaune entre les deux).
 - color=3 : les stations sont coloré selon leur tendance pour le prochain tour (vert: stable, rouge: baisse, jaune: montée).
 - color>=14 : les stations sont coloré selon leur capacité maximum en vélo (jaune pour le niveau de couleur choisi, vert pour les niveaux + 3 et plus, rouge pour les niveau -3 et inferieur).
 
+Mode de calcul du score :
+
+- scoreMode=0 (ou absent) : mode par défaut, chaque station rapporte +1 à son responsable si elle à entre 1/4 et 3/4 de ses vélo, elle rapporte -1 à son responsable sinon.
+- scoreMode=1 : chaque station possédé rapporte +1 par tour sauf si elle est vide ou pleine, dans ce cas c'est -10 par tour.
+
 Pour tester le déroulement accéléré d'une partie, nodeGameRunner.js est utilisable en ligne de commande (sous réserve d'avoir node installé) et peut prendre le chemin relatif des IA à faire combatte en paramètre. Des IA par défaut sont exécutées sinon.
-
-Pour trouver d'autres ia existante:
-  http://codeofwar.net/sites/default/files/robots/<nom_ia>.js_1.txt
-en remplaçant <nom_ia> par le nom de l'ia supposé
-une fois trouvé, on peut incrémenté le numéro de version jusqu'a trouver la version la plus à jour.
-
-Pour trouver les noms probables d'IA, consulter les noms sur la page :
-http://codeofwar.net/eo_dashboard

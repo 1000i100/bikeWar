@@ -336,15 +336,17 @@
 		com.tamina.bikewar.core.Global.IMG_BASE_PATH = imgBasePath;
 		com.tamina.bikewar.core.Global.SAVE_URL = savePath;
 	};
-	com.tamina.bikewar.PlayerUI.init = function (firstPlayerName, firstPlayerScript, secondPlayerName, secondPlayerScript, debugMode, speed, trends, color, consoleLogData) {
+	com.tamina.bikewar.PlayerUI.init = function (firstPlayerName, firstPlayerScript, secondPlayerName, secondPlayerScript, debugMode, speed, trends, color, consoleLogData, scoreMode) {
 		if(!speed) speed = com.tamina.bikewar.game.Game.GAME_SPEED;
 		if(!trends) trends = false;
 		if(!color) color = false;
 		if(!consoleLogData) consoleLogData = false;
+		if(!scoreMode) scoreMode = 0;
 		com.tamina.bikewar.game.Game.GAME_SPEED = speed;
 		com.tamina.bikewar.game.Game.TRENDS = trends;
 		com.tamina.bikewar.game.Game.COLOR_MODE = color;
 		com.tamina.bikewar.game.Game.CONSOLE_LOG_DATA = consoleLogData;
+		com.tamina.bikewar.game.Game.SCORE_MODE = scoreMode;
 
 		if (debugMode == null) debugMode = false;
 		org.tamina.log.QuickLogger.info("init " + firstPlayerName + " vs " + secondPlayerName);
@@ -444,16 +446,19 @@
 				}
 			}
 		}, updatePlayerScore: function () {
-			var _g1 = 0;
-			var _g = this._data.stations.length;
-			while (_g1 < _g) {
-				var i = _g1++;
-				var s = this._data.stations[i];
-				if (s.owner != null && s.owner.id == this.playerList[0].player.id) {
-					if (com.tamina.bikewar.game.GameUtils.hasStationEnoughBike(s)) this.playerList[0].score++; else this.playerList[0].score--;
-				} else if (s.owner != null && s.owner.id == this.playerList[1].player.id) {
-					if (com.tamina.bikewar.game.GameUtils.hasStationEnoughBike(s)) this.playerList[1].score++; else this.playerList[1].score--;
+			var nbrStations = this._data.stations.length;
+			for (var i=0 ; i<nbrStations ; i++) {
+				var station = this._data.stations[i];
+				if (station.owner != null && station.owner.id == this.playerList[0].player.id) {
+					this.playerList[0].score += calculScore(station);
+				} else if (station.owner != null && station.owner.id == this.playerList[1].player.id) {
+					this.playerList[1].score += calculScore(station);
 				}
+			}
+			function calculScore(station){
+				var scoreMode = com.tamina.bikewar.game.Game.SCORE_MODE;
+				if(!scoreMode) return com.tamina.bikewar.game.GameUtils.hasStationEnoughBike(station)?1:-1;
+				if(scoreMode) return getDistanceAuxLimites(station)?1:-10;
 			}
 			if (this.playerList[0].score >= com.tamina.bikewar.game.Game.MAX_SCORE) this.endBattle(new com.tamina.bikewar.data.BattleResult(this.playerList, this._currentTurn, this.playerList[0].player, "SCORE MAX")); else if (this.playerList[1].score >= com.tamina.bikewar.game.Game.MAX_SCORE) this.endBattle(new com.tamina.bikewar.data.BattleResult(this.playerList, this._currentTurn, this.playerList[1].player, "SCORE MAX"));
 		}, parseOrder: function () {
@@ -3388,7 +3393,7 @@
 			if(!color){
 				this._backgroundContainer.removeAllChildren();
 				var targetBackground = this._defaultBackgroundBitmap;
-				if (!com.tamina.bikewar.game.GameUtils.hasStationEnoughBike(this._data)) targetBackground = this._outBackgroundBitmap;
+				if (!com.tamina.bikewar.game.GameUtils.hasStationEnoughBike(this._data)) targetBackground = this.badBgImg; //this._outBackgroundBitmap;
 				this._backgroundContainer.addChild(targetBackground);
 			}
 			if(color===1) {
