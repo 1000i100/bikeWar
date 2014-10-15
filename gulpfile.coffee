@@ -36,7 +36,7 @@ gulp.task('minify', ->
 		compress:
 			unsafe:true
 		output:
-				semicolons:false
+				semicolons:true
 	))
 	.pipe(gulp.dest(targetPaths.final))
 )
