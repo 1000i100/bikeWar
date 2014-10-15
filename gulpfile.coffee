@@ -1,9 +1,10 @@
-gulp    = require 'gulp'
-gutil   = require 'gulp-util'
-include = require 'gulp-include'
-coffee  = require 'gulp-coffee'
-uglify  = require 'gulp-uglify'
-del     = require 'del'
+gulp      = require 'gulp'
+gutil     = require 'gulp-util'
+include   = require 'gulp-include'
+coffee    = require 'gulp-coffee'
+
+uglify    = require 'gulp-uglify'
+del       = require 'del'
 
 srcPaths =
 	coffee: 'ia/*.coffee'
@@ -14,9 +15,9 @@ targetPaths =
 
 
 
-gulp.task('default', ['coffee2js','minify'])
+gulp.task('default', ['coffee2js', 'minify'])
 gulp.task('clean', ->
-	del(targetPaths, gutil.log)
+	del((cheminsEnTableau for key, cheminsEnTableau of targetPaths), gutil.log)
 )
 gulp.task('coffee2js', ->
 	gulp.src(srcPaths.coffee)
@@ -41,7 +42,7 @@ gulp.task('minify', ->
 	.pipe(gulp.dest(targetPaths.final))
 )
 
-gulp.task('watch', ->
+gulp.task('watch', ['default'], ->
 	gulp.watch(srcPaths.coffee, ['coffee2js']);
 	gulp.watch(srcPaths.js, ['minify']);
 )
