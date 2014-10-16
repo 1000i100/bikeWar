@@ -29,3 +29,13 @@ Mode de calcul du score :
 - scoreMode=1 : chaque station possédé rapporte +1 par tour sauf si elle est vide ou pleine, dans ce cas c'est -10 par tour.
 
 Pour tester le déroulement accéléré d'une partie, nodeGameRunner.js est utilisable en ligne de commande (sous réserve d'avoir node installé) et peut prendre le chemin relatif des IA à faire combatte en paramètre. Des IA par défaut sont exécutées sinon.
+
+## compilation et build publiable
+
+Pour les ia écrites en coffeescript :
+
+- installer node / npm
+- en ligne de commande aller dans le dossier du projet (cd chemin du projet)
+- installer les dépendances (npm install)
+- executer gulp (node_modules/.bin/gulp watch)
+- codez ! (vos script coffee sonts dans "générées" en version js et dans "publiable" en version minifiée/obfusqué)

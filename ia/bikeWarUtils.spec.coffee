@@ -16,6 +16,30 @@ describe "bikeWarUtils", ->
 			ensembleASoustraire = [{plop:4},50]
 			ensembleRésultât = [1,{plip:4}]
 			expect(différence(ensembleHôte, ensembleASoustraire)).toEqual(ensembleRésultât)
+
+	describe "ordres, instructions, actions...", ->
+		it "charge 3 vélo", ->
+			camion = {id:1,currentStation:{id:2}}
+			ordre = {truckId:1,targetStationId:2,type:'load',bikeNum:3}
+			expect(charger(camion,vélo=3)).toEqual(ordre);
+		it "charge jusqu'à 3 vélo (2 en pratique pour ne pas dépasser sa capacité maximum", ->
+			camion = {id:1,currentStation:{id:2},bikeNum:8}
+			ordre = {truckId:1,targetStationId:2,type:'load',bikeNum:2}
+			expect(chargerAuPlus(camion,vélo=3)).toEqual(ordre);
+		it "décharge jusqu'à 12 vélo (5 en pratique pour ne pas décharger des vélo qu'on a pas", ->
+			camion = {id:1,currentStation:{id:2},bikeNum:5}
+			ordre = {truckId:1,targetStationId:2,type:'unload',bikeNum:5}
+			expect(déchargerAuPlus(camion,vélo=12)).toEqual(ordre);
+		it "prend la responsabilité de la station ou le camion se trouve", ->
+			camion = {id:1,currentStation:{id:2}}
+			ordre = {truckId:1,targetStationId:2,type:'load',bikeNum:0}
+			expect(rallierStation(camion)).toEqual(ordre);
+		it "déplace un camion jusqu'a une station",->
+			camion = {id:1}
+			station = {id:2}
+			ordre = {truckId:1,targetStationId:2,type:'move'}
+			expect(allerA(camion, station)).toEqual(ordre);
+
 	describe "extraction de données", ->
 		it "determine si une station à suffisement de vélo", ->
 			station = {slotNum:100,bikeNum:50}

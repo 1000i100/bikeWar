@@ -41,3 +41,29 @@ différence = (tableauHôte, tableauASoustraire)->
 	tableauHôte.filter (e)->
 		!tableauASoustraire.some (e2)->
 			JSON.stringify(e2) == JSON.stringify(e)
+
+#Ordres, instructions, actions...
+chargerAuPlus = (camion,nombreVélo)->
+	charger(camion, Math.min(nombreVélo, maxChargeable(camion)))
+déchargerAuPlus = (camion,nombreVélo=0)->
+	décharger(camion, Math.min(nombreVélo, maxDéchargeable(camion)))
+charger = (camion,nombreVélo=0)->
+	construireOrdre(camion, 'load', camion.currentStation, nombreVélo)
+décharger = (camion,nombreVélo=0)->
+	construireOrdre(camion, 'unload', camion.currentStation, nombreVélo)
+rallierStation = (camion)->
+	construireOrdre(camion, 'load', camion.currentStation, 0)
+allerA = (camion, station)->
+	construireOrdre(camion, 'move', station)
+construireOrdre = (camion, instruction, stationCible, quantité=0)->
+	ordre =
+		truckId:camion.id
+		targetStationId:stationCible.id
+		type:instruction
+	ordre.bikeNum = quantité if instruction!='move'
+	return ordre
+
+maxChargeable = (camion)->
+	CAPACITÉ_CAMION - camion.bikeNum
+maxDéchargeable = (camion)->
+	camion.bikeNum
