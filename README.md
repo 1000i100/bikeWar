@@ -35,7 +35,13 @@ Pour tester le déroulement accéléré d'une partie, nodeGameRunner.js est util
 Pour les ia écrites en coffeescript :
 
 - installer node / npm
-- en ligne de commande aller dans le dossier du projet (cd chemin du projet)
-- installer les dépendances (npm install)
-- executer gulp (node_modules/.bin/gulp watch)
-- codez ! (vos script coffee sonts dans "générées" en version js et dans "publiable" en version minifiée/obfusqué)
+- en ligne de commande aller dans le dossier du projet (`cd chemin du projet`)
+- installer les dépendances (`npm install`)
+- executer gulp `node_modules/.bin/gulp watch` ou juste `node_modules/.bin/gulp` si le watch ram trop.
+- codez ! (vos scripts coffee sont dans `générées` en version js et dans `publiable` en version minifiés/obfusqués)
+
+Pour regénérer la table des temps de trajet :
+tapper en ligne de commande :
+`indexeurRunner.js indexeurDesTempsDeTrajet.js > indexTempsTrajet.json`
+
+tappez `node_modules/.bin/gulp clean` pour nétoyer les fichiers générés

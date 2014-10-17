@@ -25,7 +25,7 @@ gulp.task('coffee2js', ->
 	.pipe(coffee({bare: true}).on('error', gutil.log))
 	.pipe(gulp.dest(targetPaths.js))
 )
-gulp.task('minify', ->
+gulp.task('minify', ['coffee2js'], ->
 	gulp.src(srcPaths.js)
 	.pipe(uglify(
 		mangle:

@@ -47,6 +47,41 @@ describe "bikeWarUtils", ->
 		it "determine si une station à un nombre déséquilibré de vélo", ->
 			station = {slotNum:100,bikeNum:0}
 			expect(isStationÉquilibrée(station)).toBeFalsy()
+		it "fourni la station ou est un camion arrêté", ->
+			camion = {id:1,currentStation:{id:2}}
+			station = {id:2}
+			expect(getStation(camion)).toEqual(station)
+		it "fourni la station ou va un camion en mouvement", ->
+			camion = {id:1,destination:{id:2}}
+			station = {id:2}
+			expect(getStation(camion)).toEqual(station)
+
+		describe "determine si une station est suffisement équillibré", ->
+			it "sans sécurité, frontière haute correcte", ->
+				station = {slotNum:100,bikeNum:75}
+				expect(isStationSecure(station,securité=0)).toBeTruthy()
+			it "sans sécurité, frontière haute incorrecte", ->
+				station = {slotNum:100,bikeNum:76}
+				expect(isStationSecure(station,securité=0)).toBeFalsy()
+			it "avec 1 vélo de sécurité demandé mais non fourni, frontière haute", ->
+				station = {slotNum:100,bikeNum:75}
+				expect(isStationSecure(station,securité=1)).toBeFalsy()
+			it "avec 1 vélo de sécurité demandé et fourni, frontière haute", ->
+				station = {slotNum:100,bikeNum:74}
+				expect(isStationSecure(station,securité=1)).toBeTruthy()
+			it "sans sécurité, frontière basse correcte", ->
+				station = {slotNum:100,bikeNum:25}
+				expect(isStationSecure(station,securité=0)).toBeTruthy()
+			it "sans sécurité, frontière basse incorrecte", ->
+				station = {slotNum:100,bikeNum:24}
+				expect(isStationSecure(station,securité=0)).toBeFalsy()
+			it "avec 2 vélo de sécurité demandés mais non fourni, frontière basse", ->
+				station = {slotNum:100,bikeNum:26}
+				expect(isStationSecure(station,securité=2)).toBeFalsy()
+			it "avec 2 vélo de sécurité demandés et fourni, frontière basse", ->
+				station = {slotNum:100,bikeNum:27}
+				expect(isStationSecure(station,securité=2)).toBeTruthy()
+
 		it "calcule le nombre de vélo manquant pour atteindre 50% de charge", ->
 			entité = {slotNum:100,bikeNum:0}
 			expect(deltaCible(entité)).toEqual(50)
@@ -86,7 +121,18 @@ describe "bikeWarUtils", ->
 				stations = [{slotNum:10,bikeNum:2},{slotNum:10,bikeNum:5},{slotNum:20,bikeNum:12},{slotNum:40,bikeNum:35}]
 				stationsSelectionnées = [{slotNum:10,bikeNum:5},{slotNum:20,bikeNum:12}]
 				expect(filtrerParTauxDeRemplissage(stations,min=.5,max=.75)).toEqual(stationsSelectionnées)
+			xit "filtre les stations atteignable en moins de 3 tours", ->
 
+		describe "tri de stations", ->
+			it "tri les stations par taille décroissante", ->
+				stations = [{slotNum:10},{slotNum:20},{slotNum:15},{slotNum:40}]
+				stationsTriées = [{slotNum:40},{slotNum:20},{slotNum:15},{slotNum:10}]
+				expect(trierStationsParTaille(stations)).toEqual(stationsTriées)
+			xit "tri les stations par temps de trajet croissant", ->
+				camion = {}
+				stations = [{}]
+				stationsTriées = [{}]
+				expect(trierStationsParTempsDeTrajet(camion, stations)).toEqual(stationsTriées)
 
 		describe "selection de camions", ->
 			it "liste les camions qui m'appartiennent", ->
@@ -98,6 +144,11 @@ describe "bikeWarUtils", ->
 				camions = [{owner:{id:1}},{owner:{id:1}},{owner:{id:2}}]
 				listeMesCamions = [{owner:{id:1}},{owner:{id:1}}]
 				expect(getMesCamions(monId=1, camions)).toEqual(listeMesCamions)
+
+			it "liste les camions adverses", ->
+				camions = [{owner:{id:1}},{owner:{id:1}},{owner:{id:2}}]
+				camionsAdverses = [{owner:{id:1}},{owner:{id:1}}]
+				expect(getCamionsAdverses(monId=2, camions)).toEqual(camionsAdverses)
 
 			it "liste les camions qui sont à l'arrêt", ->
 				camions = [{currentStation:{}},{}]
@@ -113,3 +164,20 @@ describe "bikeWarUtils", ->
 				camions = [{bikeNum:2},{bikeNum:5},{bikeNum:7},{bikeNum:8}]
 				camionsSelectionnées = [{bikeNum:5},{bikeNum:7}]
 				expect(filtrerParTauxDeRemplissage(camions,min=.5,max=.75)).toEqual(camionsSelectionnées)
+
+	describe "distance, proximité, temps de déplacement", ->
+		it "calcule la distance à vol d'oiseau entre deux points", ->
+			expect(distanceEntre({x:1,y:1},{x:2,y:1})).toEqual(1)
+
+		it "indique la distance entre deux stations", ->
+			stationDépart = {id:1}
+			stationArrivée = {id:4}
+			expect(tempsTrajet(stationDépart,stationArrivée)).toEqual(3)
+		it "indique la distance entre deux stations indépendament de leur ordre", ->
+			stationDépart = {id:4}
+			stationArrivée = {id:1}
+			expect(tempsTrajet(stationDépart,stationArrivée)).toEqual(3)
+		it "indique une distance dissuasive entre deux fois la même station", ->
+			stationDépart = {id:1}
+			stationArrivée = {id:1}
+			expect(tempsTrajet(stationDépart,stationArrivée)).toEqual(999999)
