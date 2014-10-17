@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+var global = {j:[{scoreCumulé:0,victoire:0},{scoreCumulé:0,victoire:0}]};
+global.TRENDS=3;
+global.NOMBRE_SIMULATION=100;
 (function ($hx_exports) {
 	"use strict";
 	$hx_exports.com = $hx_exports.com || {};
@@ -528,22 +531,28 @@
 				this._IAList[1].send(this._data);
 			}
 		}, updateBikeStations: function () {
-			var _g1 = 0;
-			var _g = this._data.stations.length;
-			while (_g1 < _g) {
-				var i = _g1++;
+			function rollBikeStableChange(){
+				if(global.TRENDS<2) return Math.round(Math.random() * 2) - 1;
+				else return 0;
+			}
+			function rollBikeIncreasingChange(){
+				if(!global.TRENDS) return 0;
+				if(global.TRENDS<3) return Math.round(Math.random() * 3);
+				if(global.TRENDS==3) return 1;
+			}
+			for(var i=0; i<this._data.stations.length;i++) {
 				var station = this._data.stations[i];
 				var trend = com.tamina.bikewar.game.GameUtils.getBikeStationTrend(station, this._data.currentTime);
 				var trendNum = 0;
 				switch (trend[1]) {
 					case 1:
-						Math.round(Math.random() * 3);
+						trendNum = rollBikeIncreasingChange();
 						break;
 					case 0:
-						-Math.round(Math.random() * 3);
+						trendNum = -rollBikeIncreasingChange();
 						break;
 					case 2:
-						trendNum = Math.round(Math.random() * 2) - 1;
+						trendNum = rollBikeStableChange();
 						break;
 				}
 				station.bikeNum += trendNum;
@@ -553,6 +562,13 @@
 		}, endBattle: function (result) {
 			this._isComputing = false;
 			this._endBattleDate = new Date();
+			var winnerGameIndex = this.playerList[0].score>this.playerList[1].score?0:1;
+			var winnerGlobalIndex = (result.winner.name===global.j[1].name)?1:0;
+
+			global.j[winnerGlobalIndex].victoire++;
+			global.j[winnerGlobalIndex].scoreCumulé+=this.playerList[winnerGameIndex].score;
+			global.j[(winnerGlobalIndex+1)%2].scoreCumulé+=this.playerList[(winnerGameIndex+1)%2].score;
+
 			haxe.Log.trace("fin du match : " + this.playerList[0].player.name + " = " + this.playerList[0].score + "// " + this.playerList[1].player.name + " = " + this.playerList[1].score + " // WINNER " + result.winner.name, { fileName: "BaseGameEngine.hx", lineNumber: 364, className: "com.tamina.bikewar.core.BaseGameEngine", methodName: "endBattle"});
 			haxe.Log.trace("battle duration " + (this._endBattleDate.getTime() - this._startBattleDate.getTime()) / 1000 + " sec", { fileName: "BaseGameEngine.hx", lineNumber: 365, className: "com.tamina.bikewar.core.BaseGameEngine", methodName: "endBattle"});
 			this.battle_completeSignal.dispatch(result);
@@ -569,10 +585,18 @@
 		getBattleResult: function (data, turnSpeed) {
 			if (turnSpeed == null) turnSpeed = 1;
 			this._IAList = new Array();
+			global.j[0].name = data.players[0].name;
+			global.j[1].name = data.players[1].name;
+
 			this._IAList.push(new com.tamina.bikewar.server.NodeIA(data.players[0].script, data.players[0].id));
 			this._IAList.push(new com.tamina.bikewar.server.NodeIA(data.players[1].script, data.players[1].id));
-			com.tamina.bikewar.core.BaseGameEngine.prototype.getBattleResult.call(this, data, turnSpeed);
-			this.retrieveIAOrders();
+
+			for(var osef=0;osef<global.NOMBRE_SIMULATION;osef++){
+				com.tamina.bikewar.core.BaseGameEngine.prototype.getBattleResult.call(this, data, turnSpeed);
+				this.retrieveIAOrders();
+			}
+			haxe.Log.trace('J1: '+global.j[0].victoire+' ('+global.j[0].name+') '+'J2: '+global.j[1].victoire+' ('+global.j[1].name+') '+global.j[0].scoreCumulé+'/'+global.j[1].scoreCumulé, {});
+			nodejs.NodeJS.get_process().exit(0);
 		}, dispose: function () {
 			if (this._data != null) {
 				this._IAList[0].turnResult_completeSignal.remove($bind(this, this.IA_ordersResultHandler));

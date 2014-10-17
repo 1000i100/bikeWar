@@ -1,24 +1,24 @@
 var CAPACITÉ_CAMION, DISTANCE_MIN_AVEC_CAMIONS_ADVERSES, DISTANCE_MIN_ENTRE_MES_CAMIONS, DISTANCE_SUPPLÉMENTAIRE_MAX_CHOIX_STATION, NOMBRE_MIN_STATION_A_BONNE_DISTANCE, TAUX_DISTANCE_SUPPLÉMENTAIRE_MAX_CHOIX_STATION, VITESSE_CAMION, aBesoinDeVélos, aTropDeVélos, allerA, bonsDéplacements, capture, chargement, charger, chargerAuPlus, construireOrdre, deltaCible, différence, distanceEntre, déchargement, décharger, déchargerAuPlus, décrirePropriétaire, déplacementsAvorté, déplacementsParDéfaut, exports, filtrerParTauxDeRemplissage, getCamionsAdverses, getCamionsArrêtés, getCamionsEnMouvement, getCapacité, getMesCamions, getMesStations, getMonAutreCamion, getStation, getStationsEnnemis, getStationsNeutre, getStationsParTaille, indexTempsTrajet, isStationSecure, isStationÉquilibrée, maxChargeable, maxDéchargeable, maxTrajet, minTrajet, msg, pasAMoi, peutChargerDesVélos, peutDéchargerDesVélos, queFaireAvec, rallierStation, repartiSansCapture, statTrajet, statistiquesActivées, tempsTrajet, tendanceStation, totalTrajet, trierStationsParTaille, trierStationsParTailleEtTemps, trierStationsParTempsDeTrajet, trèsBonsDéplacements, ÉCART_DANGER_CAPTURE, ÉCART_DANGER_CHOIX_STATION, ÉCART_DANGER_CHOIX_STATION_RÉCUPÉRABLE, ÉCART_MAX_ÉQUILIBRE_CAMION_SANS_CHARGEMENT, ÉCART_MAX_ÉQUILIBRE_STATION_SANS_CHARGEMENT, ÉCART_ÉQUILIBRE_CHOIX_STATION_AIDABLE;
 
 /*
- constante modifiable pour trouver des réglages pus efficaces
+ * constante modifiable pour trouver des réglages pus efficaces
  */
 
 ÉCART_MAX_ÉQUILIBRE_STATION_SANS_CHARGEMENT = 3;
 ÉCART_MAX_ÉQUILIBRE_CAMION_SANS_CHARGEMENT = 2;
 
-ÉCART_DANGER_CAPTURE = 1;
+ÉCART_DANGER_CAPTURE = 2;
 
 ÉCART_DANGER_CHOIX_STATION = 3;
 ÉCART_ÉQUILIBRE_CHOIX_STATION_AIDABLE = 3;
-ÉCART_DANGER_CHOIX_STATION_RÉCUPÉRABLE = 2;
+ÉCART_DANGER_CHOIX_STATION_RÉCUPÉRABLE = 3;
 
 DISTANCE_MIN_ENTRE_MES_CAMIONS = 5;
-DISTANCE_MIN_AVEC_CAMIONS_ADVERSES = 4;
+DISTANCE_MIN_AVEC_CAMIONS_ADVERSES = 5;
 
-DISTANCE_SUPPLÉMENTAIRE_MAX_CHOIX_STATION = 2;
-TAUX_DISTANCE_SUPPLÉMENTAIRE_MAX_CHOIX_STATION = 1.2;
-NOMBRE_MIN_STATION_A_BONNE_DISTANCE = 10;
+DISTANCE_SUPPLÉMENTAIRE_MAX_CHOIX_STATION = 5;
+TAUX_DISTANCE_SUPPLÉMENTAIRE_MAX_CHOIX_STATION = 2;
+NOMBRE_MIN_STATION_A_BONNE_DISTANCE = 15;
 
 if (!exports) {
 	exports = this;
