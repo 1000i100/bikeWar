@@ -1,3 +1,5 @@
+[Tester](http://gammanu.github.io/bikeWar/?j1=jourJ.js?j2=otherIA/jourJ/epicloot3_6.js)
+
 BikeWar_js: Développer en JS pour le Code Of War: Bike War
 ==========================================================
 
